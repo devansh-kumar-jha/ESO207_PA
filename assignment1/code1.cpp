@@ -2,6 +2,7 @@
 using namespace std;
 #define int long long int
 
+// Self Referential Structure for the Doubly Linked List
 struct node {
     node *prev;
     int cof;
@@ -9,6 +10,7 @@ struct node {
     node *next;
 };
 
+// Making of a new node with required initial values
 node* make_node(int cof,int exp)
 {
     node *temp=new node;
@@ -17,7 +19,8 @@ node* make_node(int cof,int exp)
     return temp;
 }
 
-node* insert_node(int cof,int exp,struct node* TAIL)
+// Inserting the node with required value in a doubly linked list's tail
+node* insert_node(int cof,int exp,node* TAIL)
 {
     node *temp=make_node(cof,exp);
     temp->next=NULL;
@@ -27,6 +30,7 @@ node* insert_node(int cof,int exp,struct node* TAIL)
     return TAIL;
 }
 
+// Releasing the memory used in a Doubly Linked List
 void free_all(node *HEAD,node *TAIL)
 {
     node *temp=HEAD;
@@ -38,11 +42,12 @@ void free_all(node *HEAD,node *TAIL)
     return;
 }
 
+// Priting the contents of a Doubly Linked List
 void print_all(node* HEAD)
 {
     node* temp=HEAD;
     while(temp!=NULL) {
-        cout<<temp->cof<<" "<<temp->exp<<"/n";
+        cout<<temp->cof<<" "<<temp->exp<<" ";
         temp=temp->next;
     }
     return; 
@@ -64,58 +69,65 @@ void make_list(node** HEAD,node** TAIL,node* HEAD1,node* TAIL1,node* HEAD2,node*
             temp1=temp1->next;
         }
         else { 
-            (*TAIL)=insert_node(temp1->cof+temp2->cof,temp1->exp,(*TAIL));
+            if(temp1->exp<temp2->exp) {
+                (*TAIL)=insert_node(temp1->cof,temp1->exp,(*TAIL));
+                temp1=temp1->next;
+            }
+            else if(temp1->exp>temp2->exp) {
+                (*TAIL)=insert_node(temp2->cof,temp2->exp,(*TAIL));
+                temp2=temp2->next;
+            }
+            else {
+                (*TAIL)=insert_node(temp1->cof+temp2->cof,temp1->exp,(*TAIL));
+                temp1=temp1->next;
+                temp2=temp2->next;
+            }
             if((*HEAD)==NULL) (*HEAD)=(*TAIL);
-            temp1=temp1->next;
-            temp2=temp2->next;
         }
     }
     return;
 }
 
-// int lsearch(node* HEAD,int find)
-// {
-//     node* temp=HEAD;
-//     while(temp!=NULL) {
-//         if(temp->cof==find) return 1;
-//         temp=temp->next;
-//     }
-//     return 0;
-// }
-
-int main()
+int32_t main()
 {
+    /* Taking the Required Input */
+    
     int n=9;  cin>>n;
     int m=9;  cin>>m;
-    // scanf("%d",&n);
     
     struct node *HEAD1=NULL,*TAIL1=NULL;
     struct node *HEAD2=NULL,*TAIL2=NULL;
     
     for(int i=0;i<n;i++) {
-        int a=7,b=7;   //scanf("%d ",&a);
+        int a=7,b=7;
         cin>>a>>b;
         TAIL1=insert_node(a,b,TAIL1);
         if(HEAD1==NULL) HEAD1=TAIL1;
     }
     
     for(int i=0;i<m;i++) {
-        int a=7,b=7;   //scanf("%d ",&a);
+        int a=7,b=7;
         cin>>a>>b;
         TAIL2=insert_node(a,b,TAIL2);
         if(HEAD2==NULL) HEAD2=TAIL2;
     }
 
-    /* Write the code */
+    /* Solving of the Problem Statement */
     
     struct node *HEAD=NULL,*TAIL=NULL;
     make_list(&HEAD,&TAIL,HEAD1,TAIL1,HEAD2,TAIL2);
     print_all(HEAD);
     
+    /* Releasing the Memory Used */
+    
     free_all(HEAD,TAIL);
     free_all(HEAD1,TAIL1);
     free_all(HEAD2,TAIL2);
+    
     HEAD1=NULL;   TAIL1=NULL;
     HEAD2=NULL;   TAIL2=NULL;
+    
+    /* Ending of the Program */
+    
     return 0;
 }
