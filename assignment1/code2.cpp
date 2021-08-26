@@ -56,52 +56,52 @@ void free_all(node *HEAD,node *TAIL,node* S)
 }
 
 
+
 // Priting the contents of a Doubly Linked List.
 void print_all(node* HEAD,node* S)
 {
     node* temp=HEAD;
     while(temp!=S) {
-        cout<<temp->cof<<" "<<temp->exp<<" ";
+        if(temp->cof != 0 ) cout<<temp->cof<<" "<<temp->exp<<" ";
         temp=temp->next;
     }
     return; 
 }
 
 
-// This function returns the coefficient of a particular exponent in the polynomial.
-int make_val(/* */)
+// Linear Search in the Doubly Linked List for appropriate node to add.
+node* lsearch(node* HEAD,node* S,int find)
 {
-    /* 
-    Check the logic for multiplication and the quantities required.
-    */
-    return 0;
+    node* temp=HEAD;
+    while(temp!=S && temp->exp!=find) temp=temp->next;
+    return (temp==S ? NULL : temp);
 }
+
 
 
 // This is the main problem solver function which implements the O(m*n) algorithm.
 // This will take the two polynomials and also 2 pointers for the output polynomial.
 void make_list(node** HEAD,node** TAIL,node* HEAD1,node* TAIL1,node* HEAD2,node* TAIL2)
 {
-    node *temp1=HEAD1,*temp2=HEAD2;
-    int n=0,m=0;
-    while(temp1!=NULL) { temp1=temp1->next; n++; }
-    while(temp2!=NULL) { temp2=temp2->next; m++; }
+    int less=HEAD1->exp+HEAD2->exp,more=TAIL1->exp+TAIL2->exp;
+    for(int i=less;i<=more;i++) {    
+        (*TAIL)=insert_node(0,i,(*TAIL),SENT);
+        if((*HEAD)==SENT) {
+            (*HEAD)=(*TAIL);    SENT->next=(*HEAD);
+            (*HEAD)->prev=SENT;  
+        }
+    }
 
-    temp1=HEAD1;  temp2=HEAD2;
-    int a[n],b[m];
-    for(int i=0;i<n;i++) {
-        a[i]=temp1->cof;
+    node *temp1=HEAD1;
+    while(temp1!=SENT1) {
+        node* temp2=HEAD2;
+        while(temp2!=SENT2) {
+            int find=temp1->exp+temp2->exp;
+            node* temp=lsearch((*HEAD),SENT,find);
+            if(temp!=NULL) temp->cof += (temp1->cof * temp2->cof);
+            temp2=temp2->next;
+        }
         temp1=temp1->next;
-    }
-    for(int i=0;i<m;i++) {
-        b[i]=temp2->cof;
-        temp2=temp2->next;
-    }
-
-    for(int i=0;i<n*m;i++) {
-        int a=make_val(/* */);
-        (*TAIL)=insert_node(a,i,(*TAIL),SENT);
-        if((*HEAD)==NULL) (*TAIL)=(*HEAD);
     }
 
     return;
