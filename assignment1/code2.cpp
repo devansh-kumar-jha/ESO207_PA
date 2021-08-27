@@ -69,15 +69,6 @@ void print_all(node* HEAD,node* S)
 }
 
 
-// Linear Search in the Doubly Linked List for appropriate node to add.
-node* lsearch(node* HEAD,node* S,int find)
-{
-    node* temp=HEAD;
-    while(temp!=S && temp->exp!=find) temp=temp->next;
-    return (temp==S ? NULL : temp);
-}
-
-
 
 // This is the main problem solver function which implements the O(m*n) algorithm.
 // This will take the two polynomials and also 2 pointers for the output polynomial.
