@@ -62,7 +62,7 @@ void print_all(node* HEAD,node* S)
 {
     node* temp=HEAD;
     while(temp!=S) {
-        if(temp->cof != 0 ) cout<<temp->cof<<" "<<temp->exp<<" ";
+        cout<<temp->cof<<" "<<temp->exp<<" ";
         temp=temp->next;
     }
     return; 
@@ -94,14 +94,28 @@ void make_list(node** HEAD,node** TAIL,node* HEAD1,node* TAIL1,node* HEAD2,node*
 
     node *temp1=HEAD1;
     while(temp1!=SENT1) {
-        node* temp2=HEAD2;
+        node* temp2=HEAD2,*temp=(*HEAD);
         while(temp2!=SENT2) {
             int find=temp1->exp+temp2->exp;
-            node* temp=lsearch((*HEAD),SENT,find);
-            if(temp!=NULL) temp->cof += (temp1->cof * temp2->cof);
+            while(temp!=SENT && temp->exp!=find) temp=temp->next;
+            temp->cof += (temp1->cof * temp2->cof);
             temp2=temp2->next;
         }
         temp1=temp1->next;
+    }
+
+    node* temp=(*HEAD);
+    if((*HEAD)->cof==0) (*HEAD)=(*HEAD)->next;
+    if((*TAIL)->cof==0) (*TAIL)=(*TAIL)->prev;
+    while(temp!=SENT) {
+        if(temp->cof==0) {
+            (temp->prev)->next=temp->next;
+            (temp->next)->prev=temp->prev;
+            node* a=temp;
+            temp=temp->next;
+            free(a);
+        }
+        else temp=temp->next;
     }
 
     return;
