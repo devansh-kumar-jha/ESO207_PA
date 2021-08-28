@@ -1,3 +1,29 @@
+\documentclass[20pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\title{ESO207 Programming Assignment 1}
+\author{Devansh Kumar Jha}
+\date{2021–08–28}
 \begin{document}
-    \alpha 2 3 4
+\maketitle
+
+Polynomials may be represented as linked lists.  Consider a polynomial p(x),  with non-zero terms, 
+\[p(x) =(a_1)^e_1+(a_2)^(e_2)+. . .+(a_(n−1))^(e_(n−1))+(a_n)^(e_n)\] 
+where \{0≤e1< e2< . . . < e(n−1)< en\} are (non-negative) integers.  We assume that coefficients a1, . . . , an are non-zero integers.Polynomial p(x) can be represented as a linked list of nodes.  Each node has three fields:  coefficient, exponent and link to the next node.  Let us assume that list is a doubly linked list, with sentinel node, sorted in ascending order of exponents.
+
+(a) (marks 5+15)Write pseudo-code to add two polynomials p(x) and q(x) in this representation.  Your algorithm should take O(n+m) time, where n, mare the number of terms in p(x),q(x) respectively.Implement your pseudo-code as an actual program.
+
+(b) (marks 10+20)Write  pseudo-code  to  multiply  two  polynomials p(x)  and q(x)  in  this representation.   Do  runtime  complexity  analysis  of  your  algorithm  in  terms  of n, m,  the number of terms in p(x),q(x) respectively.  State this complexity in ‘O’ notation.Implement your pseudo-code as an actual program.
+
+Note  that  output  list  should  satisfy  all  constraints  (non-zero  coefficients,  exponents  in  strict ascending order etc.)  of representation of a polynomial.  Make your code non-destructive, that is, it should not modify the lists for p(x) and q(x)
+\section{Programming problem 1}
+
+\begin{itemize}
+\item Hey
+\item Oh!
+\item Let’s
+\item Go!
+\end{itemize}
 \end{document}
