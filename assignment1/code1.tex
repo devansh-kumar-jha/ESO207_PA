@@ -3,27 +3,61 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
-\title{ESO207 Programming Assignment 1}
+\usepackage[ruled, lined, linesnumbered, commentsnumbered, longend]{algorithm2e}
+\usepackage{xcolor}
+
+\title{Question 1}
 \author{Devansh Kumar Jha}
-\date{2021–08–28}
+\date{2021–08–30}
+
 \begin{document}
 \maketitle
 
-Polynomials may be represented as linked lists.  Consider a polynomial p(x),  with non-zero terms, 
-\[p(x) =(a_1)^e_1+(a_2)^(e_2)+. . .+(a_(n−1))^(e_(n−1))+(a_n)^(e_n)\] 
-where \{0≤e1< e2< . . . < e(n−1)< en\} are (non-negative) integers.  We assume that coefficients a1, . . . , an are non-zero integers.Polynomial p(x) can be represented as a linked list of nodes.  Each node has three fields:  coefficient, exponent and link to the next node.  Let us assume that list is a doubly linked list, with sentinel node, sorted in ascending order of exponents.
-
-(a) (marks 5+15)Write pseudo-code to add two polynomials p(x) and q(x) in this representation.  Your algorithm should take O(n+m) time, where n, mare the number of terms in p(x),q(x) respectively.Implement your pseudo-code as an actual program.
-
-(b) (marks 10+20)Write  pseudo-code  to  multiply  two  polynomials p(x)  and q(x)  in  this representation.   Do  runtime  complexity  analysis  of  your  algorithm  in  terms  of n, m,  the number of terms in p(x),q(x) respectively.  State this complexity in ‘O’ notation.Implement your pseudo-code as an actual program.
-
-Note  that  output  list  should  satisfy  all  constraints  (non-zero  coefficients,  exponents  in  strict ascending order etc.)  of representation of a polynomial.  Make your code non-destructive, that is, it should not modify the lists for p(x) and q(x)
 \section{Programming problem 1}
 
+\subsection{Problem Description}
+We are required to add the polynomials according to the given input where we are first given two integers n and m which are followed by {2n} and {2m} integers in the next two lines.
+The main complexities and boundary cases in the problem were to design a {O(m+n)} algorithm and to recognize that zero polynomials are the exceptional cases which do not directly fit into the algorithm and so are to be specifically handled. To take care of integer overflow we by default use big integers as our storage containers.
+
+\subsection{Data Structure Usage}
+We will be using a dynamically allocated doubly linked list with a sentinel node for easier and error free implementation.
+
+\subsection{Algorithm Explanation}
+The algorithm is quite simple. We just take two temprorary node pointers which will correspond to the current term of that particular polynomial in the addition process. There are 3 major cases as follows -
+
 \begin{itemize}
-\item Hey
-\item Oh!
-\item Let’s
-\item Go!
+\item \textbf{1st polynomial already traversed}
+\\
+In this case we just add the term of 2nd polynomial to the answer polynomials doubly linked list. Here we don't need to check anything as the question statement says that the coefficients will anyways be non-zero.
+
+\item \textbf{2nd polynomail already traversed}
+\\
+Similar to the case above with the difference that this time we will be traversing the 1st polynomial and adding new nodes to the resultant polynomial.
+
+\item \textbf{Both polynomials are being traversed}
+\\
+This is the most complex case of the mentioned three with some exceptions to be handled within. While we are simultaneously traversing the 1st and 2nd polynomial the currently checked term might have different variable exponents. In that case we cannot add them and we simply need to add one of them to the list. We chose to add the element with smaller exponent into the list as it ensures the automatic sorting of the resultant polynomial.
+In case of the exponents being equal we need to confirm that the coefficients don't add to zero. In case they do than we just skip these terms however if not than we add them.
+So it can easily be seen that in this case the iteration would be a bit more costly as compared 1st and 2nd case iteration.
 \end{itemize}
+
+\subsection{Pseudo Code}
+These are the variables used - 
+\begin{itemize}
+\item \textbf{HEAD}   - The first element of addition polynomial.
+\item \textbf{HEAD1} - The first element of first polynomial.
+\item \textbf{HEAD2} - The first element of second polynomial.
+\item \textbf{SENT}   - Sentinel node for addition polynomial.
+\end{itemize}
+\textbf{**} - Similar goes for {TAIL,TAIL1,TAIL2,SENT1,SENT2}
+
+\begin{algorithm}
+	\SetKwFunction{isOddNumber}{isOddNumber}
+	\SetKwInOut{KwIn}{Input}
+	\SetKwInOut{KwOut}{Output}
+
+	\KwIn{}
+	\KwOut{}	
+\end{algorithm}
+
 \end{document}

@@ -1,1 +1,48 @@
-% This will contain the mix of both the problems in LaTEX
+\documentclass[20pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[ruled, lined, linesnumbered, commentsnumbered, longend]{algorithm2e}
+\usepackage{xcolor}
+
+\title{ESO207 Programming Assignment 1}
+\author{Devansh Kumar Jha(200318) and Divyansh Gupta(200351)}
+\date{2021–08–30}
+\begin{document}
+\maketitle
+
+\section{Problem Statements}
+
+Polynomials may be represented as linked lists.  Consider a polynomial {p(x)},  with non-zero terms, $p(x) =(a_1)^e_1+(a_2)^(e_2)+. . .+(a_(n−1))^(e_(n−1))+(a_n)^(e_n)$ 
+where {0≤e1< e2< . . . < e(n−1)< en} are (non-negative) integers.  We assume that coefficients  {a1, . . . , an} are non-zero integers. Polynomial {p(x)} can be represented as a linked list of nodes.  Each node has three fields:  coefficient, exponent and link to the next node.  Let us assume that list is a doubly linked list, with sentinel node, sorted in ascending order of exponents.
+
+(a) (marks 5+15)Write pseudo-code to add two polynomials {p(x) and q(x)} in this representation.  Your algorithm should take {O(n+m)} time, where {n, m} are the number of terms in {p(x) and q(x)} respectively.Implement your pseudo-code as an actual program.
+
+(b) (marks 10+20)Write  pseudo-code  to  multiply  two  polynomials p(x)  and q(x)  in  this representation.   Do  runtime  complexity  analysis  of  your  algorithm  in  terms  of {n, m},  the number of terms in {p(x) and q(x)} respectively.  State this complexity in ‘O’ notation. Implement your pseudo-code as an actual program.
+
+Note  that  output  list  should  satisfy  all  constraints  (non-zero  coefficients,  exponents  in  strict ascending order etc.)  of representation of a polynomial.  Make your code non-destructive, that is, it should not modify the lists for {p(x) and q(x)}
+
+\newpage
+\section{Programming Problem 1}
+
+\subsection{Problem Description}
+We are required to add the polynomials according to the given input where we are first given two integers n and m which are followed by {2n} and {2m} integers in the next two lines.
+The main complexities and boundary cases in the problem were to design a {O(m+n)} algorithm and to recognize that zero polynomials are the exceptional cases which do not directly fit into the algorithm and so are to be specifically handled. To take care of integer overflow we by default use big integers as our storage containers.
+
+\subsection{Algorithm Explanation}
+The algorithm is quite simple. We just take two temprorary node pointers which will correspond to the current term of that particular polynomial in the addition process. There are 3 major cases as follows -
+
+\begin{itemize}
+\item 1st polynomial already traversed
+
+\item 2nd polynomail already traversed
+
+\item Both polynomials are being traversed
+\end{itemize}
+
+\newpage
+\section{Programming Problem 2}
+
+
+\end{document}
