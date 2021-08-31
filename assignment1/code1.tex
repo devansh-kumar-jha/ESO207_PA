@@ -51,13 +51,52 @@ These are the variables used -
 \end{itemize}
 \textbf{**} - Similar goes for {TAIL,TAIL1,TAIL2,SENT1,SENT2}
 
+\newcommand\mycommfont[1]{\small\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+
 \begin{algorithm}
+
 	\SetKwFunction{isOddNumber}{isOddNumber}
 	\SetKwInOut{KwIn}{Input}
 	\SetKwInOut{KwOut}{Output}
 
-	\KwIn{}
-	\KwOut{}	
+	\KwIn{The two linked lists showing p(x) and q(x) and pointers to make output polynomial r(x)}
+	\KwOut{No output}
+	
+	$temp1 = HEAD1$ and $temp2 = HEAD2$ \\
+	\tcc{Temprorary pointers to traverse along the available polynomials.}	
+
+	\While{$temp1 != SENT1$ or $temp2 != SENT2$} {
+		\eIf{$temp1 == SENT1$} {
+			$TAIL.insert-node(temp2)$  \tcp*[f]{insert-node() is a function which makes a new node and adds to the list}
+			$temp2 \leftarrow (temp2 \rightarrow next)$
+		} {   \eIf{$temp2 == SENT2$} {
+					$TAIL.insert-node(temp1)$ \\
+					$temp1 \leftarrow (temp1 \rightarrow next)$
+				} {
+					\eIf{$temp1 \rightarrow exp == temp2 \rightarrow exp$} {
+							\eIf{$temp1 \rightarrow cof != temp2 \rightarrow cof$} {
+									a=make-node($temp1 \rightarrow cof + temp2 \rightarrow cof$,$temp1 \rightarrow cof$)
+									\tcc{make-node() function allocates memory for a new node and fills with the parameters given}
+									$TAIL.insert-node(a)$
+							} { } 
+							$temp1 \leftarrow (temp1 \rightarrow next)$ \\
+							$temp2 \leftarrow (temp2 \rightarrow next)$
+					} {
+							\eIf{$temp1 \rightarrow exp < temp2 \rightarrow exp$} {
+								$TAIL.insert-node(temp1)$ \\	
+								$temp1 \leftarrow (temp1 \rightarrow next)$
+							} {
+								$TAIL.insert-node(temp2)$ \\
+								$temp2 \leftarrow (temp2 \rightarrow next)$	
+							}	
+					}
+				}
+		}
+	}
+	\KwRet{}
+	\caption{List Making Algorithm}	
+
 \end{algorithm}
 
 \end{document}
