@@ -1,0 +1,103 @@
+\documentclass[20pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[ruled, lined, linesnumbered, commentsnumbered, longend]{algorithm2e}
+\usepackage{xcolor}
+
+\title{Question 2}
+\author{Devansh Kumar Jha}
+\date{2021–08–30}
+
+\begin{document}
+\maketitle
+
+\section{Programming problem 2}
+
+\subsection{Problem Description}
+We are required to multiply the polynomials according to the given input where we are first given two integers n and m which are followed by {2n} and {2m} integers in the next two lines.
+The main complexities and boundary cases in the problem were to design a {O(mn)} algorithm and to recognize that zero polynomials are the exceptional cases which do not directly fit into the algorithm and so are to be specifically handled. To take care of integer overflow we by default use big integers as our storage containers.
+
+\subsection{Data Structure Usage}
+We will be using a dynamically allocated doubly linked list with a sentinel node for easier and error free implementation.
+
+\subsection{Algorithm Explanation}
+The algorithm is quite simple. We first allocate nodes to the answer list starting from lowest exponent to highest exponent with coefficient=0. Then we take two temporary node pointers which will traverse through the polynomial and for each term of the first polynomial the 2nd pointer will traverse through the whole 2nd polynomial and hence the complexity {O(mn)}.
+
+\subsection{Pseudo Code}
+These are the variables used - 
+\begin{itemize}
+\item \textbf{HEAD}   - The first element of answer polynomial.
+\item \textbf{HEAD1} - The first element of first polynomial.
+\item \textbf{HEAD2} - The first element of second polynomial.
+\item \textbf{SENT}   - Sentinel node for answer polynomial.
+\end{itemize}
+\textbf{**} - Similar goes for {TAIL,TAIL1,TAIL2,SENT1,SENT2}
+
+\newcommand\mycommfont[1]{\small\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+
+\begin{algorithm}
+
+	\SetKwFunction{isOddNumber}{isOddNumber}
+	\SetKwInOut{KwIn}{Input}
+	\SetKwInOut{KwOut}{Output}
+
+	\KwIn{The two linked lists showing p(x) and q(x) and pointers to make output polynomial r(x)}
+	\KwOut{No output}
+
+    $less = HEAD1 \rightarrow exp + HEAD2 \rightarrow exp$,$more = TAIL1 \rightarrow exp + TAIL2 \rightarrow exp$ \\
+	\tcc{Temprorary pointers to traverse from highest to lowest exponents.}
+
+    \For{$i \leftarrow less$ \KwTo $more$} {
+			$TAIL.insert-node(coeff=0,exp=i)$  \tcp*[f]{insert-node() is a function which makes a new node and adds to the list}
+		} 
+
+    $temp1 = HEAD1$
+
+    \While{$temp1 != SENT1$}{
+        $temp2 = HEAD2$, $temp=HEAD$ \\
+        \While{$temp2 != SENT2$}{
+            $find = temp1 \rightarrow exp + temp2 \rightarrow exp$ \\
+            \While{$temp != SENT$ and $temp \rightarrow exp != find$}{
+                $temp \leftarrow (temp \rightarrow next)$
+            }
+            $temp \rightarrow cof + = (temp1 \rightarrow cof * temp2 \rightarrow cof)$
+            $temp2 \leftarrow (temp2 \rightarrow next)$
+        }
+        $temp1 \leftarrow (temp1 \rightarrow next)$
+    }
+
+    $temp = HEAD$
+
+    \If{$HEAD \rightarrow cof == 0$} {
+					$HEAD \leftarrow (HEAD \rightarrow next)$ \\
+                }
+    
+    \If{$TAIL \rightarrow cof == 0$} {
+					$TAIL \leftarrow (TAIL \rightarrow prev)$
+				}
+            
+    \While{$temp != SENT$}{
+        \eIf{$temp \rightarrow cof == 0$}{
+            $(temp \rightarrow prev) \rightarrow next = temp \rightarrow next$
+            $(temp \rightarrow next) \rightarrow prev = temp \rightarrow prev$\\
+            $a = temp$ \\
+            $temp \leftarrow (temp \rightarrow next)$ \\
+            $free(a)$
+        }
+        {
+            $temp \leftarrow (temp \rightarrow next)$
+        }
+    }
+    \KwRet{}
+	\caption{List Making Algorithm}	
+
+\end{algorithm}
+
+\end{document}
+    
+
+
+

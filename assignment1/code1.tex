@@ -76,7 +76,7 @@ These are the variables used -
 				} {
 					\eIf{$temp1 \rightarrow exp == temp2 \rightarrow exp$} {
 							\eIf{$temp1 \rightarrow cof != temp2 \rightarrow cof$} {
-									a=make-node($temp1 \rightarrow cof + temp2 \rightarrow cof$,$temp1 \rightarrow cof$)
+									a=make-node($temp1 \rightarrow cof + temp2 \rightarrow cof$,$temp1 \rightarrow exp$)
 									\tcc{make-node() function allocates memory for a new node and fills with the parameters given}
 									$TAIL.insert-node(a)$
 							} { } 
