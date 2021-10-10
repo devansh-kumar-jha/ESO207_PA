@@ -75,7 +75,7 @@ void print_all(node* HEAD,node* S)
 void make_list(node** HEAD,node** TAIL,node* HEAD1,node* TAIL1,node* HEAD2,node* TAIL2)
 {
     // Implement the Divide and Conquer Algorithm here !!!
-    
+        
 
     return;
 }
