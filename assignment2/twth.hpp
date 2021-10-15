@@ -33,6 +33,7 @@ class twth
     twth(twthnode* a);
     twthnode* get();
     void insert(int x);
+    void insert(twthnode* node);
     int remove();
     void display();
 };
@@ -283,6 +284,16 @@ void twth::insert(int val)
         else root=twonode(ret->m,ret->n1,ret->n2);
     }
     free_space(temp);
+    return;
+}
+
+void twth::insert(twthnode* node)
+{
+    if(node->type==0) return;
+    else if(node->type==1) insert(node->left);
+    else if(node->type==2) insert(node->d1);
+    else if(node->type==3) {}
+    else {}
     return;
 }
 
