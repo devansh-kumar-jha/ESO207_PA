@@ -1,6 +1,6 @@
 /// Algorithm
 /// if(twonode) -> if(val>=x) -> go left
-///             -> else       -> go right
+///             -> else       -> go middle
 /// if(threenode) -> if(val1>=x)      -> go left
 ///               -> else if(val2>=x) -> go middle
 ///               -> else             -> go right
