@@ -4,7 +4,6 @@
 
 //! Code Left to be Added ->
 //!     split() and repair() from the two three tree
-//!     unite() for two trees at a particular node
 
 #include <iostream>
 using namespace std;
@@ -37,9 +36,8 @@ class twth
     twthnode* get(int val);
     void set(twthnode* node);
     void insert(int x);
-    void insert(twthnode* node,twthnode* pos);
     void remove(int x);
-    ret_split* split(twthnode* node);
+    // ret_split* split(twthnode* node);
     void repair(twthnode* node);
     void display();
     void clear();
@@ -444,24 +442,25 @@ twthnode* twth::get()
     return root;
 }
 
-/// Returns the node with the particular value.
-/// NULL if no such node is present.
+/// Returns the last node which has a value
+/// strictly smaller than the given value.
+/// NULL if no such value exists.
 /// O(h(T)) time
 twthnode* twth::get(int val)
 {
     twthnode* ans=root;    
     while(ans!=NULL || ans->type==0) {
         if(ans->type==2) {
-            if(ans->d1==val) return ans;
+            if(ans->d1<val) return ans;
             else return NULL;
         }
         else if(ans->type==3) {
-            if(ans->d1>val) ans=ans->left;
+            if(ans->d1>=val) ans=ans->left;
             else ans=ans->middle;
         }
         else {
-            if(ans->d1>val) ans=ans->left;
-            else if(ans->d2>val) ans=ans->middle;
+            if(ans->d1>=val) ans=ans->left;
+            else if(ans->d2>=val) ans=ans->middle;
             else ans=ans->right;
         }
     }
@@ -475,13 +474,6 @@ void twth::set(twthnode* node)
 {
     root=node;
     return;
-}
-
-void unite(twth* th1,twth* th2,twth* th)
-{
-    // Merge the given tree
-    // with the object tree and this is done
-    // following the cases.    
 }
 
 /// Insert a leaf node with given value in the tree.
@@ -512,18 +504,6 @@ void twth::insert(int val)
         else root=twonode(ret->m,ret->n1,ret->n2);
         // cerr<<"correct transfers"<<" "<<(root==NULL)<<" "<<root->d1<<" "<<root->d2<<" ";
     }
-    return;
-}
-
-void twth::insert(twthnode* node,twthnode* pos)
-{
-    if(node->type==0) return;
-    else if(node->type==1) insert(node->left,pos);
-    else if(node->type==2) insert(node->d1);
-    
-    // Handle these two cases in h(T) iterations.
-    else if(node->type==3) {}
-    else {}
     return;
 }
 
@@ -560,10 +540,13 @@ void twth::display()
     return;
 }
 
-ret_split* twth::split(twthnode* node)
-{
+/// This function will be used to split the tree
+/// at a particular node of the tree as provided.
+/// O(h(T)) time.
+// ret_split* twth::split(twthnode* node)
+// {
 
-}
+// }
 
 void twth::repair(twthnode* node)
 {
