@@ -2,13 +2,7 @@
 //! This file can be used as a header for the code files
 //! or could be directly pasted.
 
-//! Debugging Requirements ->
-//!     insert() into the three after 3 items is not working
-//!     The function twthnode* get(int val) should return the first node in case of "equal values"
-//!     (Equal values are not allowed in the set ADT. Check for this boundary)
-//!     Memory allocation is not correct everywhere
 //! Code Left to be Added ->
-//!     delete() from the two three tree
 //!     split() and repair() from the two three tree
 //!     unite() for two trees at a particular node
 
@@ -43,7 +37,7 @@ class twth
     twthnode* get(int val);
     void insert(int x);
     void insert(twthnode* node);
-    int remove();
+    void remove(int x);
     void split(twthnode* node);
     void repair(twthnode* node);
     void display();
@@ -55,8 +49,17 @@ class twth
 /// the two three tree.
 struct ret_insert_part
 {
-    twth* n1;
-    twth* n2;
+    twthnode* n1;
+    twthnode* n2;
+    int m;
+};
+
+/// Structure returned by the delete_part() function
+/// used as a sub function for deleting from
+/// the two three tree.
+struct ret_delete_part
+{
+    twthnode* n;
     int m;
 };
 
@@ -78,8 +81,6 @@ void free_space(twthnode* node)
     if(node->right!=NULL) free_space(node->right);
     if(node->middle!=NULL) free_space(node->middle);
     free(node);
-    // This is a error prone function so precaution is taken.
-    cerr<<"Error occured"<<"\n";
     return;
 }
 
@@ -98,15 +99,14 @@ twthnode* null()
 
 /// Creates a Single type node for the Two Three Tree
 /// O(1) time
-twthnode* single(twth* t)
+twthnode* single(twthnode* node)
 {
     twthnode* temp=new twthnode;
     if(temp==NULL) cerr<<"Memory full";
     temp->type=1;
     temp->d1=-1;         temp->d2=-1;
     temp->parent=NULL;   
-    temp->left=t->get();
-    (t->get())->parent=temp;
+    temp->left=node;     node->parent=temp;
     temp->right=NULL;    temp->middle=NULL;
     return temp;
 }
@@ -126,150 +126,277 @@ twthnode* leaf(int val)
 
 /// Creates a node with two children for the Two Three Tree
 /// O(1) time
-twthnode* twonode(int val,twth* t1,twth* t2)
+twthnode* twonode(int val,twthnode* n1,twthnode* n2)
 {
     twthnode* temp=new twthnode;
     if(temp==NULL) cerr<<"Memory full";
     temp->type=3;
     temp->d1=val;   temp->d2=-1;
     temp->parent=NULL;
-    temp->left=t1->get();
-    (t1->get())->parent=temp;
-    temp->middle=t2->get();
-    (t2->get())->parent=temp;
+    temp->left=n1;      n1->parent=temp;
+    temp->middle=n2;    n2->parent=temp;
     temp->right=NULL;
     return temp;
 }
 
 /// Creates a node with three children for the Two Three Tree
 /// O(1) time
-twthnode* threenode(int val1,int val2,twth* t1,twth* t2,twth* t3)
+twthnode* threenode(int val1,int val2,twthnode* n1,twthnode* n2,twthnode* n3)
 {
     twthnode* temp=new twthnode;
     if(temp==NULL) cerr<<"Memory full";
     temp->type=4;
     temp->d1=val1;   temp->d2=val2;
     temp->parent=NULL;
-    temp->left=t1->get();
-    (t1->get())->parent=temp;
-    temp->middle=t2->get();
-    (t2->get())->parent=temp;
-    temp->right=t3->get();
-    (t3->get())->parent=temp;
+    temp->left=n1;     n1->parent=temp;
+    temp->middle=n2;   n2->parent=temp;
+    temp->right=n3;    n3->parent=temp;
     return temp;
 }
 
 /// This function returns a triple (n1,n2,m) where
-/// n1 and n2 are two three trees and m is the minimum in
-/// two three tree n2.
-ret_insert_part* insert_part(twth* t,int val)
+/// n1 and n2 are two nodes and m is the minimum in
+/// two three tree rooted at n2.
+ret_insert_part* insert_part(twthnode* node,int val)
 {
     ret_insert_part* p=new ret_insert_part;
     
-    if((t->get())->type==2) {
-        cerr<<"leaf started"<<" ";
-        int v=(t->get())->d1;
-        cerr<<"leaf not null"<<" ";
-        if(val==v) {  p->n1=t;  p->n2=NULL;  p->m=-1; }
+    if(node->type==2) {
+        // cerr<<"leaf started"<<" ";
+        int v=node->d1;
+        // cerr<<"leaf not null"<<" ";
+        if(val==v) {  
+            // cerr<<"val==v"<<" ";
+            p->n1=node;  p->n2=NULL;  p->m=-1; 
+        }
         else if(val<v) { 
-            twth th(val);
-            p->m=v; p->n2=t; p->n1=&th;
+            // cerr<<"val<v"<<" ";
+            p->m=v; p->n2=node; p->n1=leaf(val);
         }
         else {
-            twth th(val);
-            p->m=val; p->n1=t; p->n2=&th;
+            // cerr<<"val>v"<<" ";
+            p->m=val; p->n1=node; p->n2=leaf(val);
         }
-        cerr<<"leaf completed"<<" "<<p->m<<" ";
+        // cerr<<"leaf completed"<<" "<<p->m<<" ";
     }
     
-    else if((t->get())->type==3) {
-        cerr<<"twonode started"<<" ";
-        int a=(t->get())->d1;
-        twth alpha((t->get())->left);
-        twth beta((t->get())->middle);
-        cerr<<"twonode ok"<<" ";
+    else if(node->type==3) {
+        // cerr<<"twonode started"<<" ";
+        int a=node->d1;
+        twthnode* alpha = node->left;
+        twthnode* beta  = node->middle;
+        // cerr<<"twonode ok"<<" ";
         if(val<a) {
-            ret_insert_part* ret=insert_part(&alpha,val);
-            // free(t->get());       // Clear the root node as it is no longer useful
-            // cerr<<"root deletion ok"<<" ";
-            if(ret->n2==NULL) {
-                twth l(twonode(a,ret->n1,&beta));
-                p->m=-1; p->n2=NULL; p->n1=&l; 
-            }
-            else { 
-                twth l(threenode(ret->m,a,ret->n1,ret->n2,&beta));
-                p->m=-1; p->n2=NULL; p->n1=&l; 
-            }
+            // cerr<<"val<a"<<" ";
+            ret_insert_part* ret=insert_part(alpha,val);
+            if(ret->n2==NULL) {  p->m=-1; p->n2=NULL; p->n1=twonode(a,ret->n1,beta);  }
+            else {  p->m=-1; p->n2=NULL; p->n1=threenode(ret->m,a,ret->n1,ret->n2,beta);  }
         }
         else {
-            ret_insert_part* ret=insert_part(&beta,val);
-            // free(t->get());
-            // cerr<<"root deletion ok"<<" ";
-            if(ret->n2==NULL) {
-                twth l(twonode(a,&alpha,ret->n1));
-                p->m=-1; p->n2=NULL; p->n1=&l;
-            }
-            else {
-                twth l(threenode(a,ret->m,&alpha,ret->n1,ret->n2));
-                p->m=-1; p->n2=NULL; p->n1=&l;
-            }
+            // cerr<<"val>=a"<<" ";
+            ret_insert_part* ret=insert_part(beta,val);
+            if(ret->n2==NULL) { p->m=-1; p->n2=NULL; p->n1=twonode(a,alpha,ret->n1); }
+            else { p->m=-1; p->n2=NULL; p->n1=threenode(a,ret->m,alpha,ret->n1,ret->n2); }
         }
-        cerr<<"twonode completed"<<" "<<p->m<<" ";
+        // cerr<<"twonode completed"<<" "<<p->m<<" ";
     }
     
     else {
-        cerr<<"threenode started"<<" ";
-        int a=(t->get())->d1;
-        int b=(t->get())->d2;
-        twth alpha((t->get())->left);
-        twth beta((t->get())->middle);
-        twth gamma((t->get())->right);
-        cerr<<"threenode ok"<<" ";
+        // cerr<<"threenode started"<<" ";
+        int a=node->d1;
+        int b=node->d2;
+        twthnode* alpha  = node->left;
+        twthnode* beta   = node->middle;
+        twthnode* gamma  = node->right;
+        // cerr<<"threenode ok"<<" ";
         if(val<a) {
-            ret_insert_part* ret=insert_part(&alpha,val);
-            if(ret->n2==NULL) { 
-                twth l(threenode(a,b,ret->n1,&beta,&gamma));
-                p->m=-1; p->n2=NULL; p->n1=&l; 
-            }
-            else { 
-                twth l1(twonode(ret->m,ret->n1,ret->n2));
-                twth l2(twonode(b,&beta,&gamma));
-                p->m=-1; p->n2=&l2; p->n1=&l1; 
-            }    
+            // cerr<<"val<a"<<" ";
+            ret_insert_part* ret=insert_part(alpha,val);
+            if(ret->n2==NULL) {  p->m=-1; p->n2=NULL; p->n1=threenode(a,b,ret->n1,beta,gamma);  }
+            else {  p->m=a; p->n2=twonode(b,beta,gamma); p->n1=twonode(ret->m,ret->n1,ret->n2);  }    
         }
         else if(val>=a && val<b) {
-            ret_insert_part* ret=insert_part(&beta,val);
-            if(ret->n2==NULL) { 
-                twth l(threenode(a,b,&alpha,ret->n1,&gamma));
-                p->m=-1; p->n2=NULL; p->n1=&l; 
-            }
-            else { 
-                twth l1(twonode(a,&alpha,ret->n1));
-                twth l2(twonode(b,ret->n2,&gamma));
-                p->m=ret->m; p->n2=&l2; p->n1=&l1; 
-            }
+            // cerr<<"val<b"<<" ";
+            ret_insert_part* ret=insert_part(beta,val);
+            if(ret->n2==NULL) { p->m=-1; p->n2=NULL; p->n1=threenode(a,b,alpha,ret->n1,gamma);  }
+            else { p->m=ret->m; p->n2=twonode(b,ret->n2,gamma); p->n1=twonode(a,alpha,ret->n1); }
         }
         else {
-            ret_insert_part* ret=insert_part(&gamma,val);
-            if(ret->n2==NULL) { 
-                twth l(threenode(a,b,&alpha,&beta,ret->n1));
-                p->m=-1; p->n2=NULL; p->n1=&l; 
-            }
-            else { 
-                twth l1(twonode(a,&alpha,&beta));
-                twth l2(twonode(ret->m,ret->n1,ret->n2));
-                p->m=b; p->n2=&l2; p->n1=&l1; 
-            }
+            // cerr<<"val>=b"<<" ";
+            ret_insert_part* ret=insert_part(gamma,val);
+            if(ret->n2==NULL) { p->m=-1; p->n2=NULL; p->n1=threenode(a,b,alpha,beta,ret->n1);  }
+            else { p->m=b; p->n2=twonode(ret->m,ret->n1,ret->n2); p->n1=twonode(a,alpha,beta);  }
         }
-        cerr<<"threenode completed"<<" "<<p->m<<" "<<(p->n1->get()->d1)<<" "<<(p->n2->get()->d1)<<" ";
+        // cerr<<"threenode completed"<<" "<<p->m<<" "<<(p->n1->d1)<<" "<<(p->n2->d1)<<" ";
     }
     
     return p;
 }
 
-void delete_part(twth* t,int val)
+/// This function returns a doublet (n,m) where
+/// n is a node and m denotes the minimum value
+/// present in a two three tree rooted at n.
+/// If min(n)=min(tree with calling function) than m=-1.
+ret_delete_part* delete_part(twthnode* node,int val)
 {
+    ret_delete_part* p=new ret_delete_part;
 
+    if(node->type==3) {
+        // cerr<<"twonode started"<<" ";
+        int a=node->d1;
+        twthnode* alpha = node->left;
+        twthnode* beta  = node->middle;
+        // cerr<<"twonode ok"<<" ";
+        if(alpha->type==2 && beta->type==2) {
+            // cerr<<"leaf"<<" ";
+            if(val==alpha->d1) { 
+                // cerr<<"val=1"<<" ";
+                p->m=beta->d1; p->n=single(beta); 
+                free(alpha);
+            }
+            else if(val==beta->d1) {
+                // cerr<<"val=2"<<" ";
+                p->m=alpha->d1; p->n=single(alpha);
+                free(beta);
+            }
+            else { 
+                // cerr<<"not found"<<" ";
+                p->m=-1; p->n=node; 
+            }
+        }
+        else {
+            if(val<a) {
+                // cerr<<"val<a"<<" ";
+                ret_delete_part* ret=delete_part(alpha,val);
+                if(ret->n->type!=1) { p->m=ret->m; p->n=twonode(a,ret->n,beta); }
+                else {
+                    if(beta->type==3) { 
+                        p->m=ret->m; 
+                        p->n=threenode(a,beta->d1,ret->n->left,beta->left,beta->middle); 
+                    }
+                    else { 
+                        p->m=ret->m; 
+                        twthnode* p1=twonode(a,ret->n->left,beta->left);
+                        twthnode* p2=twonode(beta->d2,beta->middle,beta->right);
+                        p->n=twonode(beta->d1,p1,p2);
+                    }
+                }
+            }
+            else {
+                // cerr<<"val>=a"<<" ";
+                ret_delete_part* ret=delete_part(beta,val);
+                int m_prime= (ret->m==-1) ? a : ret->m ;
+                if(ret->n->type!=1) { p->m=-1; p->n=twonode(a,alpha,ret->n); }
+                else {
+                    if(alpha->type==3) { 
+                        p->m=-1; 
+                        twthnode* t=threenode(alpha->d1,m_prime,alpha->left,alpha->middle,ret->n->left);
+                        p->n=single(t);
+                    }
+                    else { 
+                        p->m=-1; 
+                        twthnode* p1=twonode(alpha->d1,alpha->left,alpha->middle);
+                        twthnode* p2=twonode(m_prime,alpha->right,ret->n->left);
+                        p->n=twonode(alpha->d2,p1,p2);
+                    }
+                }
+            }
+        }
+        // cerr<<"twonode completed"<<" "<<p->m<<" ";
+    }
+    
+    else {
+        // cerr<<"threenode started"<<" ";
+        int a=node->d1;
+        int b=node->d2;
+        twthnode* alpha = node->left;
+        twthnode* beta  = node->middle;
+        twthnode* gamma = node->right;
+        // cerr<<"threenode ok"<<" ";
+        if(alpha->type==2 && beta->type==2 && gamma->type==2) {
+            // cerr<<"leaf"<<" ";
+            if(val==alpha->d1) { 
+                // cerr<<"val=1"<<" ";
+                p->m=beta->d1; p->n=twonode(b,beta,gamma); 
+                free(alpha);
+            }
+            else if(val==beta->d1) {
+                // cerr<<"val=2"<<" ";
+                p->m=-1; p->n=twonode(b,alpha,gamma);
+                free(beta);
+            }
+            else if(val==gamma->d1) {
+                // cerr<<"val=3"<<" ";
+                p->n=twonode(a,alpha,beta); p->m=-1;
+                free(gamma);
+            }
+            else { 
+                // cerr<<"not found"<<" ";
+                p->m=-1; p->n=node; 
+            }
+        }
+        else {
+            if(val<a) {
+                // cerr<<"val<a"<<" ";
+                ret_delete_part* ret=delete_part(alpha,val);
+                if(ret->n->type!=1) { p->m=ret->m; p->n=threenode(a,b,ret->n,beta,gamma); }
+                else {
+                    if(beta->type==3) { 
+                        p->m=ret->m; 
+                        twthnode* t=threenode(a,beta->d1,ret->n->left,beta->left,beta->middle);
+                        p->n=twonode(b,t,gamma);
+                    }
+                    else { 
+                        p->m=ret->m; 
+                        twthnode* p1=twonode(a,ret->n->left,beta->left);
+                        twthnode* p2=twonode(beta->d2,beta->middle,beta->right);
+                        p->n=threenode(beta->d1,b,p1,p2,gamma);
+                    }
+                }
+            }
+            else if(val<b) {
+                // cerr<<"val<b"<<" ";
+                ret_delete_part* ret=delete_part(beta,val);
+                int m_prime= (ret->m==-1) ? a : ret->m ;
+                if(ret->n->type!=1) { p->m=-1; p->n=threenode(m_prime,b,alpha,ret->n,gamma); }
+                else {
+                    if(alpha->type==3) { 
+                        p->m=-1; 
+                        twthnode* t=threenode(alpha->d1,m_prime,alpha->left,alpha->middle,ret->n->left);
+                        p->n=twonode(b,t,gamma); 
+                    }
+                    else { 
+                        p->m=-1; 
+                        twthnode* p1=twonode(alpha->d1,alpha->left,alpha->middle);
+                        twthnode* p2=twonode(m_prime,alpha->right,ret->n->left);
+                        p->n=threenode(alpha->d2,b,p1,p2,gamma);
+                    }
+                }
+            }
+            else {
+                // cerr<<"val>=b"<<" ";
+                ret_delete_part* ret=delete_part(gamma,val);
+                int m_prime= (ret->m==-1) ? b : ret->m ;
+                if(ret->n->type!=1) { p->m=-1; p->n=threenode(a,m_prime,alpha,beta,ret->n); }
+                else {
+                    if(beta->type==3) { 
+                        p->m=-1; 
+                        twthnode* t=threenode(beta->d1,m_prime,beta->left,beta->middle,ret->n->left);
+                        p->n=twonode(a,alpha,t); 
+                    }
+                    else { 
+                        p->m=-1; 
+                        twthnode* p1=twonode(beta->d1,beta->left,beta->middle);
+                        twthnode* p2=twonode(m_prime,beta->right,ret->n->left);
+                        p->n=threenode(a,beta->d2,alpha,p1,p2);
+                    }
+                }
+            }
+        }
+        // cerr<<"threenode completed"<<" "<<p->m<<" ";
+    }
+
+    return p;
 }
 
 /// This function will be used to display the elements in a
@@ -350,34 +477,32 @@ void unite(twth* th1,twth* th2,twth* th)
 }
 
 /// Insert a leaf node with given value in the tree.
+/// Duplicacy is not allowed while inserting.
 /// O(h(T)) time.
 void twth::insert(int val)
 {
-    cerr<<"came"<<" ";
-    cerr<<"root null"<<" "<<(root==NULL)<<" ";
+    // cerr<<"came"<<" ";
+    // cerr<<"root null"<<" "<<(root==NULL)<<" ";
     int p=root->type;
-    cerr<<"done"<<" ";
+    // cerr<<"done"<<" ";
     if(p==0) {
         free(root);  // Clears un-necessary null() node
         root=leaf(val);
     }    
     else if(p==2) {
         if(val==root->d1) {}
-        else if(val<root->d1) {
-            twth t1(val);
-            root=twonode(root->d1,&t1,this);
-        }
-        else {
-            twth t1(val);
-            root=twonode(val,this,&t1);
-        } 
+        else if(val<root->d1) { root=twonode(root->d1,leaf(val),root); }
+        else { root=twonode(val,root,leaf(val)); } 
     }
     else {
-        ret_insert_part* ret=insert_part(this,val);
-        cerr<<"came back to insert"<<" "<<ret->m<<" ";
-        if((ret->n2)==NULL) { cerr<<"in null"<<" "<<ret->n1->get()<<" "; root=(ret->n1)->get(); }
+        ret_insert_part* ret=insert_part(root,val);
+        // cerr<<"came back to insert"<<" "<<ret->m<<" ";
+        if((ret->n2)==NULL) { 
+            // cerr<<"in null"<<" "<<ret->n1->d1<<" "; 
+            root=ret->n1;
+        }
         else root=twonode(ret->m,ret->n1,ret->n2);
-        cerr<<"correct transfers"<<" "<<(root==NULL)<<" "<<root->d1<<" "<<root->d2<<" ";
+        // cerr<<"correct transfers"<<" "<<(root==NULL)<<" "<<root->d1<<" "<<root->d2<<" ";
     }
     return;
 }
@@ -394,10 +519,30 @@ void twth::insert(twthnode* node)
     return;
 }
 
-int twth::remove()
+/// Delete the required node from the two three tree.
+/// If the node is not available than nothing is done.
+/// O(h(T)) time.
+void twth::remove(int val)
 {
-    int ans=0;
-    return ans;
+    // cerr<<"came"<<" ";
+    int p=root->type;
+    // cerr<<"done"<<" ";
+    if(p==0) {}
+    else if(p==2) {
+        if(val==root->d1) {
+            free(root);
+            root=null();
+        }
+        else {}
+    }
+    else {
+        ret_delete_part* ret=delete_part(root,val);
+        // cerr<<"back to remove"<<" "<<ret->m<<" "<<ret->n->type<<" ";
+        if(ret->n->type==1) root=ret->n->left;
+        else root=ret->n;
+        // cerr<<"removal completed"<<" "<<root->d1<<" "<<root->d2<<" ";
+    }
+    return;
 }
 
 void twth::display()
