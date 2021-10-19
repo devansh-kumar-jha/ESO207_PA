@@ -16,7 +16,26 @@
 
 #include "twth.hpp"
 
+void Union(twth* th,twth* th1,twth* th2)
+{
+
+}
+
 int32_t main()
 {
-    
+    twth th1,th2;
+    int n1;  cin>>n1;
+    int x;
+    for(int i=0;i<n1;i++) { cin>>x; th1.insert(x); }
+    int n2;  cin>>n2;
+    for(int i=0;i<n2;i++) { cin>>x; th2.insert(x); }
+
+    twth th;
+    Union(&th,&th1,&th2);
+    th.display();
+
+    th1.clear();
+    th2.clear();
+    th.clear();
+    return 0;
 }
