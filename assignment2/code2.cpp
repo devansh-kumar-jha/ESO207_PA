@@ -16,7 +16,11 @@
 
 void Split(twth* th,int x,twth* th1,twth* th2)
 {
-
+    twthnode* cut=th->get(x);
+    ret_split* ans=th->split(cut);
+    th1->set(ans->n1);
+    th2->set(ans->n2);
+    return;
 }
 
 int32_t main()

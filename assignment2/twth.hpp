@@ -35,10 +35,11 @@ class twth
     twth(twthnode* a);
     twthnode* get();
     twthnode* get(int val);
+    void set(twthnode* node);
     void insert(int x);
-    void insert(twthnode* node);
+    void insert(twthnode* node,twthnode* pos);
     void remove(int x);
-    void split(twthnode* node);
+    ret_split* split(twthnode* node);
     void repair(twthnode* node);
     void display();
     void clear();
@@ -63,13 +64,12 @@ struct ret_delete_part
     int m;
 };
 
-/// Structure returned by the unite() function
-/// used as a function for making merge()
-/// later on.
-struct ret_unite
+/// Structure returned by the split() function
+/// used as a function for splitting later on.
+struct ret_split
 {
-    twth* t1;
-    twth* t2;
+    twthnode* n1;
+    twthnode* n2;
 };
 
 /// This is a function which can be called directly on the root
@@ -469,6 +469,14 @@ twthnode* twth::get(int val)
     else return ans;
 }
 
+/// Sets the root node of the Two Three Tree.
+/// O(1) time.
+void twth::set(twthnode* node)
+{
+    root=node;
+    return;
+}
+
 void unite(twth* th1,twth* th2,twth* th)
 {
     // Merge the given tree
@@ -507,10 +515,10 @@ void twth::insert(int val)
     return;
 }
 
-void twth::insert(twthnode* node)
+void twth::insert(twthnode* node,twthnode* pos)
 {
     if(node->type==0) return;
-    else if(node->type==1) insert(node->left);
+    else if(node->type==1) insert(node->left,pos);
     else if(node->type==2) insert(node->d1);
     
     // Handle these two cases in h(T) iterations.
@@ -552,7 +560,7 @@ void twth::display()
     return;
 }
 
-void twth::split(twthnode* node)
+ret_split* twth::split(twthnode* node)
 {
 
 }
