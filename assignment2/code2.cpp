@@ -40,7 +40,7 @@ class twth
     twthnode* get(int val);
     void set(twthnode* node);
     void insert(int x);
-    // ret_split* split(twthnode* node);
+    ret_split* split(twthnode* node);
     void repair(twthnode* node);
     void display();
     void clear();
@@ -54,6 +54,16 @@ struct ret_insert_part
     twthnode* n1;
     twthnode* n2;
     int m;
+};
+
+/// Structure returned by the split() function
+/// used as a function for splitting later on.
+struct ret_split
+{
+    twthnode* t1;
+    twthnode* t2;
+    twthnode* rep1;
+    twthnode* rep2;
 };
 
 /// This is a function which can be called directly on the root
@@ -321,10 +331,10 @@ void twth::display()
 /// This function will be used to split the tree
 /// at a particular node of the tree as provided.
 /// O(h(T)) time.
-// ret_split* twth::split(twthnode* node)
-// {
+ret_split* twth::split(twthnode* node)
+{
 
-// }
+}
 
 void twth::repair(twthnode* node)
 {
@@ -343,9 +353,9 @@ void twth::clear()
 void Split(twth* th,int x,twth* th1,twth* th2)
 {
     twthnode* cut=th->get(x);
-    // ret_split* ans=th->split(cut);
-    // th1->set(ans->n1);
-    // th2->set(ans->n2);
+    ret_split* ans=th->split(cut);
+    th1->set(ans->t1);
+    th2->set(ans->t2);
     return;
 }
 

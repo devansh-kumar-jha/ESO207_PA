@@ -36,6 +36,7 @@ class twth
     twthnode* get(int val);
     void set(twthnode* node);
     void insert(int x);
+    void insert(twthnode* node,twthnode* pos);
     void remove(int x);
     // ret_split* split(twthnode* node);
     void repair(twthnode* node);
@@ -505,6 +506,15 @@ void twth::insert(int val)
         // cerr<<"correct transfers"<<" "<<(root==NULL)<<" "<<root->d1<<" "<<root->d2<<" ";
     }
     return;
+}
+
+/// Insert a two three rooted at a given node.
+/// Take care in this that duplicacy is not there as this function
+/// does not check for that.
+/// O(h(T)) time.
+void twth::insert(twthnode* node,twthnode* pos)
+{
+
 }
 
 /// Delete the required node from the two three tree.

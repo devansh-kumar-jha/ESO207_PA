@@ -38,9 +38,12 @@ class twth
 
     public:
     twth();
+    twth(twthnode* a);
     twthnode* get();
     void set(twthnode* node);
+    int min();
     void insert(int x);
+    void insert(twthnode* node,twthnode* pos,int m,int type);
     void display();
     void clear();
 };
@@ -216,6 +219,44 @@ ret_insert_part* insert_part(twthnode* node,int val)
     return p;
 }
 
+/// This function returns a triple (n1,n2,m) where
+/// n1 and n2 are two nodes and m is the minimum in
+/// two three tree rooted at n2.
+ret_insert_part* insert_part(twthnode* node,twthnode* pos,int m,int type)
+{
+    ret_insert_part* p=new ret_insert_part;
+    if(pos->type==3) {
+        pos->type=4;
+        if(type==1) {
+            pos->right=pos->middle;
+            pos->middle=pos->left;
+            pos->left=node;
+            pos->d2=pos->d1;    pos->d1=m;
+        }
+        else {  pos->d2=m;   pos->right=node;  }
+        node->parent=pos;
+        p->n1=NULL; p->n2=NULL; p->m=-1;
+    }
+    else {
+        pos->type=3;
+        if(type==1) {
+            twthnode* k=twonode(m,node,pos->left);
+            pos->left=pos->middle;
+            pos->middle=pos->right;
+            if(pos->parent==NULL) { p->m=pos->d1; p->n1=k; p->n2=pos; }
+            else p=insert_part(k,pos->parent,pos->d2,type);
+            pos->d1=pos->d2;
+        }
+        else {
+            twthnode* k=twonode(m,pos->right,node);
+            if(pos->parent==NULL) { p->m=pos->d2; p->n1=pos; p->n2=k; }
+            else p=insert_part(k,pos->parent,pos->d2,type);
+        }
+        pos->right=NULL;   pos->d2=-1;
+    }
+    return p;
+}
+
 /// This function will be used to display the elements in a
 /// two three tree.
 /// O(N) time where N is the total number of nodes.
@@ -238,6 +279,14 @@ twth::twth()
     return;
 }
 
+/// Makes a two three tree with a particular node as root.
+/// O(1) time
+twth::twth(twthnode* a)
+{
+    root=a;
+    return;
+}
+
 /// Returns the root node of the Two Three Tree.
 /// O(1) time
 twthnode* twth::get()
@@ -251,6 +300,16 @@ void twth::set(twthnode* node)
 {
     root=node;
     return;
+}
+
+/// Returns the minimum value in the tree.
+/// -1 is returned if tree is null().
+/// O(h(T)) time.
+int twth::min()
+{
+    twthnode* x=root;
+    while(x->left!=NULL) x=x->left;
+    return x->d1;
 }
 
 /// Insert a leaf node with given value in the tree.
@@ -284,6 +343,29 @@ void twth::insert(int val)
     return;
 }
 
+/// Insert a two three rooted at a given node.
+/// The height of the given node `pos` should be equal to height of `node`.
+/// Also the values in the tree rooted at `node` should be either all strictly greater or smaller.
+/// Take care in this that duplicacy is not there as this function does not check for that.
+/// O(h(T)) time.
+void twth::insert(twthnode* node,twthnode* pos,int m,int type)
+{
+    if(pos->type==0) { 
+        free(pos); 
+        pos=node; 
+    }
+    else if(pos->type==2) {}
+    else {
+        if(node->type==0) {}
+        else {
+            ret_insert_part* ret=insert_part(node,pos,m,type);
+            if(ret->n1==NULL) {}
+            else root=twonode(ret->m,ret->n1,ret->n2);
+        }    
+    }
+    return;
+}
+
 void twth::display()
 {
     disp(root);
@@ -299,28 +381,6 @@ void twth::clear()
 
 
 ///////////////////////////////// Specifics functions related to the question  ///////////////////////////////////////////
-
-void insert(twth* th,twthnode* node,twthnode* pos)
-{
-    if(node->type==1) {
-        insert(th,node->left,pos);
-        return;
-    }
-
-    if(pos==NULL) {}
-    else if(pos->type==0) { free(pos); pos=node; }
-    else if(pos->type==2) {
-        if(node->type==0) {}
-        else if(node->type==2) {
-            
-            pos->left=node;  node->parent=pos;
-        }
-        
-    }
-
-    return;
-
-}
 
 void Merge(twth* th1,twth* th2,twth* th)
 {
@@ -343,12 +403,12 @@ void Merge(twth* th1,twth* th2,twth* th)
     if(h1==h2) th->set(twonode(temp2->d1,th1->get(),th2->get()));
     else if(h1>h2) {
         for(int i=0;i<h2;i++) temp1=temp1->parent;
-        insert(th1,th2->get(),temp1);
+        th1->insert(th2->get(),temp1,temp2->d1,2);
         th=th1;
     }
     else {
         for(int i=0;i<h1;i++) temp2=temp2->parent;
-        insert(th2,th1->get(),temp2);
+        th2->insert(th1->get(),temp2,th2->min(),1);
         th=th2;
     }
     return;
