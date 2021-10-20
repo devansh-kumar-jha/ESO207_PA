@@ -12,7 +12,6 @@
 using namespace std;
 #define int long long int
 
-
 ///////////////////////////////// Structures and Functions for controlling the 2-3 Tree ///////////////////////////////////////////
 
 /// This represents node of the Two Three Tree
@@ -27,21 +26,33 @@ struct twthnode
     struct twthnode* right;
 };
 
+/// Structure returned by the split() function
+/// used as a function for splitting later on.
+struct ret_split
+{
+    twthnode* t1;
+    twthnode* t2;
+    twthnode* rep1;
+    twthnode* rep2;
+};
+
 /// Class controlling a Two Three tree with all member functions
 /// bound together with the elements of the tree.
 class twth
 {
     private:
     twthnode* root;
+    void repair(twthnode* node);
 
     public:
     twth();
     twthnode* get();
     twthnode* get(int val);
     void set(twthnode* node);
+    int min();
     void insert(int x);
+    void insert(twthnode* node,twthnode* pos,int m,int type);
     ret_split* split(twthnode* node);
-    void repair(twthnode* node);
     void display();
     void clear();
 };
@@ -56,21 +67,11 @@ struct ret_insert_part
     int m;
 };
 
-/// Structure returned by the split() function
-/// used as a function for splitting later on.
-struct ret_split
-{
-    twthnode* t1;
-    twthnode* t2;
-    twthnode* rep1;
-    twthnode* rep2;
-};
-
 /// This is a function which can be called directly on the root
 /// of two three tree and will free up all space occupied by that tree
-/// O(N) time Where N is total number of nodes in the tree
 void free_space(twthnode* node)
 {
+    if(node==NULL) return;
     if(node->left!=NULL) free_space(node->left);
     if(node->right!=NULL) free_space(node->right);
     if(node->middle!=NULL) free_space(node->middle);
@@ -227,9 +228,46 @@ ret_insert_part* insert_part(twthnode* node,int val)
     return p;
 }
 
+/// This function returns a triple (n1,n2,m) where
+/// n1 and n2 are two nodes and m is the minimum in
+/// two three tree rooted at n2.
+ret_insert_part* insert_part(twthnode* node,twthnode* pos,int m,int type)
+{
+    ret_insert_part* p=new ret_insert_part;
+    if(pos->type==3) {
+        pos->type=4;
+        if(type==1) {
+            pos->right=pos->middle;
+            pos->middle=pos->left;
+            pos->left=node;
+            pos->d2=pos->d1;    pos->d1=m;
+        }
+        else {  pos->d2=m;   pos->right=node;  }
+        node->parent=pos;
+        p->n1=NULL; p->n2=NULL; p->m=-1;
+    }
+    else {
+        pos->type=3;
+        if(type==1) {
+            twthnode* k=twonode(m,node,pos->left);
+            pos->left=pos->middle;
+            pos->middle=pos->right;
+            if(pos->parent==NULL) { p->m=pos->d1; p->n1=k; p->n2=pos; }
+            else p=insert_part(k,pos->parent,pos->d2,type);
+            pos->d1=pos->d2;
+        }
+        else {
+            twthnode* k=twonode(m,pos->right,node);
+            if(pos->parent==NULL) { p->m=pos->d2; p->n1=pos; p->n2=k; }
+            else p=insert_part(k,pos->parent,pos->d2,type);
+        }
+        pos->right=NULL;   pos->d2=-1;
+    }
+    return p;
+}
+
 /// This function will be used to display the elements in a
 /// two three tree.
-/// O(N) time where N is the total number of nodes.
 void disp(twthnode* root)
 {
     if(root->type==0) return;
@@ -241,7 +279,7 @@ void disp(twthnode* root)
     return;
 }
 
-/// Makes null two three tree.
+/// Constructor for a null two three tree.
 /// O(1) time
 twth::twth()
 {
@@ -290,6 +328,17 @@ void twth::set(twthnode* node)
     return;
 }
 
+/// Returns the minimum value in the tree.
+/// -1 is returned if tree is null().
+/// O(h(T)) time.
+int twth::min()
+{
+    if(root->type==0) return -1;
+    twthnode* x=root;
+    while(x->left!=NULL) x=x->left;
+    return x->d1;
+}
+
 /// Insert a leaf node with given value in the tree.
 /// Duplicacy is not allowed while inserting.
 /// O(h(T)) time.
@@ -321,10 +370,42 @@ void twth::insert(int val)
     return;
 }
 
+/// Insert a two three rooted at a given node.
+/// The height of the given node `pos` should be equal to height of `node`.
+/// Also the values in the tree rooted at `node` should be either all strictly greater or smaller.
+/// O(h(T)-h(pos)) time.
+void twth::insert(twthnode* node,twthnode* pos,int m,int type)
+{
+    if(pos->type==0) { 
+        free(pos); 
+        pos=node; 
+    }
+    else if(pos->type==2) {}
+    else {
+        if(node->type==0) {}
+        else {
+            ret_insert_part* ret=insert_part(node,pos,m,type);
+            if(ret->n1==NULL) {}
+            else root=twonode(ret->m,ret->n1,ret->n2);
+        }    
+    }
+    return;
+}
+
+/// Displays all the nodes of the tree.
+/// O(N) time where N is the total number of nodes.
 void twth::display()
 {
     disp(root);
     cout<<"\n";
+    return;
+}
+
+/// This calls free_space() on the root node.
+/// O(N) time Where N is total number of nodes in the tree
+void twth::clear()
+{
+    free_space(root);
     return;
 }
 
@@ -336,20 +417,19 @@ ret_split* twth::split(twthnode* node)
 
 }
 
+/// This repairs the two three tree after the split
+/// of the tree. This should be called immediately after the
+/// tree has been split.
 void twth::repair(twthnode* node)
 {
 
 }
 
-void twth::clear()
-{
-    free_space(root);
-    return;
-}
-
-
 //////////////////////////////////////////// Specific functions for solving the problem ///////////////////////////////////////
 
+/// The required function Split(T,x,T1,T2) which was to be made as a
+/// solution to the given problem.
+/// O(h(T)) time.
 void Split(twth* th,int x,twth* th1,twth* th2)
 {
     twthnode* cut=th->get(x);
@@ -359,20 +439,32 @@ void Split(twth* th,int x,twth* th1,twth* th2)
     return;
 }
 
+
 int32_t main()
 {
+    // Required two three trees declared.
+
     twth th;
+    twth th1,th2;
+    
+    // Taking the required inputs.
+
     int n;  cin>>n;
     int p,x;  cin>>p;
     for(int i=0;i<n;i++) { cin>>x; th.insert(x); }
 
-    twth th1,th2;
+    // Solving the problem statement.
+
     Split(&th,x,&th1,&th2);    
     th1.display();
     th2.display();
 
+    // Clearing the memory used up.
+
     th1.clear();
     th2.clear();
-    th.clear();
+    // cerr<<"Time:"<<1000*((double)clock())/(double)CLOCKS_PER_SEC<<"ms/n";
+    
+    // Ending the program.    
     return 0;
 }

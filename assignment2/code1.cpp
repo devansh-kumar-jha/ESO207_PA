@@ -5,15 +5,11 @@
 /// Can save the height of trees in the ADT.
 /// if(h1>=h2) insert(tree 2 into tree 1 at height h2)
 /// else insert(tree 1 into tree 2 at height h1)
-
-/// Iterations = h(T1)+h(T2)+max(h(T1),h(T2))
-/// The above iterations are only when the `h` in two three tree is not functional.
-/// If h functions than Iterations = max(h(T1),h(T2))
+/// Iterations <= O(h(T1)+h(T2)+max(h(T1),h(T2))+|h(T1)-h(T2)|)
 
 #include<bits/stdc++.h>
 using namespace std;
 #define int long long int
-
 
 ///////////////////////////////// Structures and Functions for controlling the 2-3 Tree ///////////////////////////////////////////
 
@@ -38,7 +34,6 @@ class twth
 
     public:
     twth();
-    twth(twthnode* a);
     twthnode* get();
     void set(twthnode* node);
     int min();
@@ -60,9 +55,9 @@ struct ret_insert_part
 
 /// This is a function which can be called directly on the root
 /// of two three tree and will free up all space occupied by that tree
-/// O(N) time Where N is total number of nodes in the tree
 void free_space(twthnode* node)
 {
+    if(node==NULL) return;
     if(node->left!=NULL) free_space(node->left);
     if(node->right!=NULL) free_space(node->right);
     if(node->middle!=NULL) free_space(node->middle);
@@ -259,7 +254,6 @@ ret_insert_part* insert_part(twthnode* node,twthnode* pos,int m,int type)
 
 /// This function will be used to display the elements in a
 /// two three tree.
-/// O(N) time where N is the total number of nodes.
 void disp(twthnode* root)
 {
     if(root->type==0) return;
@@ -271,19 +265,11 @@ void disp(twthnode* root)
     return;
 }
 
-/// Makes null two three tree.
+/// Constructor for a null two three tree.
 /// O(1) time
 twth::twth()
 {
     root=null();
-    return;
-}
-
-/// Makes a two three tree with a particular node as root.
-/// O(1) time
-twth::twth(twthnode* a)
-{
-    root=a;
     return;
 }
 
@@ -307,6 +293,7 @@ void twth::set(twthnode* node)
 /// O(h(T)) time.
 int twth::min()
 {
+    if(root->type==0) return -1;
     twthnode* x=root;
     while(x->left!=NULL) x=x->left;
     return x->d1;
@@ -346,8 +333,7 @@ void twth::insert(int val)
 /// Insert a two three rooted at a given node.
 /// The height of the given node `pos` should be equal to height of `node`.
 /// Also the values in the tree rooted at `node` should be either all strictly greater or smaller.
-/// Take care in this that duplicacy is not there as this function does not check for that.
-/// O(h(T)) time.
+/// O(h(T)-h(pos)) time.
 void twth::insert(twthnode* node,twthnode* pos,int m,int type)
 {
     if(pos->type==0) { 
@@ -366,6 +352,8 @@ void twth::insert(twthnode* node,twthnode* pos,int m,int type)
     return;
 }
 
+/// Displays all the nodes of the tree.
+/// O(N) time where N is the total number of nodes.
 void twth::display()
 {
     disp(root);
@@ -373,19 +361,23 @@ void twth::display()
     return;
 }
 
+/// This calls free_space() on the root node.
+/// O(N) time Where N is total number of nodes in the tree
 void twth::clear()
 {
     free_space(root);
     return;
 }
 
-
 ///////////////////////////////// Specifics functions related to the question  ///////////////////////////////////////////
 
+/// The required function Merge(S1,S2,S) which was to be made as a
+/// solution to the given problem.
+/// O(h(T1)+h(T2)) time.
 void Merge(twth* th1,twth* th2,twth* th)
 {
-    if(th1->get()->type==0) { th=th2; return; }
-    if(th2->get()->type==0) { th=th1; return; }
+    if(th1->get()->type==0) { th->set(th2->get()); return; }
+    if(th2->get()->type==0) { th->set(th1->get()); return; }
 
     int h1=1,h2=1;
     twthnode* temp1=th1->get();
@@ -403,32 +395,47 @@ void Merge(twth* th1,twth* th2,twth* th)
     if(h1==h2) th->set(twonode(temp2->d1,th1->get(),th2->get()));
     else if(h1>h2) {
         for(int i=0;i<h2;i++) temp1=temp1->parent;
+        // cerr<<temp1->type<<" "<<temp1->d1<<" "<<temp1->d2<<" ";
         th1->insert(th2->get(),temp1,temp2->d1,2);
-        th=th1;
+        // th1->display();
+        th->set(th1->get());
     }
     else {
         for(int i=0;i<h1;i++) temp2=temp2->parent;
+        // cerr<<temp2->type<<" "<<temp2->d1<<" "<<temp2->d2<<" ";
         th2->insert(th1->get(),temp2,th2->min(),1);
-        th=th2;
+        // th2->display();
+        th->set(th2->get());
     }
     return;
 }
 
+
 int32_t main()
 {
+    // Two three trees declared.
+
     twth th1,th2;
+    twth th;
+
+    // Input for the problem
     int n1;  cin>>n1;
     int x;
     for(int i=0;i<n1;i++) { cin>>x; th1.insert(x); }
+    // th1.display();
     int n2;  cin>>n2;
     for(int i=0;i<n2;i++) { cin>>x; th2.insert(x); }
+    // th2.display();
 
-    twth th;
+    // Solving of the problem statement.
     Merge(&th1,&th2,&th);
     th.display();
 
-    th1.clear();
-    th2.clear();
+    // Clearing the memory space used up.
+    
     th.clear();
+    // cerr<<"Time:"<<1000*((double)clock())/(double)CLOCKS_PER_SEC<<"ms/n";
+    
+    // Ending the program.
     return 0;
 }
