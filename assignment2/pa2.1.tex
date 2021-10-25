@@ -1,0 +1,193 @@
+\documentclass[20pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{polynom}
+\usepackage[ruled, lined, linesnumbered, commentsnumbered, longend]{algorithm2e}
+\usepackage{xcolor}
+
+\title{ESO207 Programming Assignment 2.1}
+\author{Devansh Kumar Jha(200318) and Divyansh Gupta(200351)}
+\date{2021–10-24}
+\begin{document}
+\maketitle
+
+\section{Data Structure Usage}
+Two-Three tree ADT controlled using a class \textbf{twth} and structure \textbf{twthnode}.
+
+\section{Strategy Used}
+Taking advantage of the fact that one of the trees has values strictly greater than the other we can design a merge algorithm to make a two three tree which displays the union of the two sets.
+Let's consider all values of T2 are greater than -
+
+\begin{itemize}
+\item \textbf{Height of trees are equal} \\
+A twonode is made with root of both trees as children and this is the root for the tree representing union of both sets.
+\item \textbf{Height of T1 is greater} \\
+An appropriate node X in the tree T1 (tree with greater height) is found and the root of tree T2 (tree with smaller height) is made children of it if possible otherwise a new node containing appropriate childrens is created and the same process is now done for parent of X. If we reach all the way to the root of T1 than procedure similar to first case is executed.
+\item \textbf{Height of T2 is greater} \\
+Similar procedure as the second case.
+\end{itemize}
+
+\newcommand\mycommfont[1]{\small\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+
+\section{Structure Used}
+The structure used for the program \textbf{twthnode} is declared as follows -
+
+\begin{algorithm}
+
+	struct twthnode \{ \\
+		\hspace{1cm} int type; \\
+		\hspace{1cm} \tcc{0 null 1 single 2 leaf 3 twonode 4 threenode}
+		\hspace{1cm} int d1,d2; \\
+		\hspace{1cm} \tcc{2 values are stored and when not needed they are set to -1}
+		\hspace{1cm} struct twthnode* parent; \\
+		\hspace{1cm} struct twthnode* left; \\
+		\hspace{1cm} struct twthnode* middle; \\
+		\hspace{1cm} struct twthnode* right; \\
+	\}
+
+	\caption{Structure Declaration}
+
+\end{algorithm}
+
+\newpage
+\section{Pseudo Codes}
+Functions created for implementing the merge - 
+
+\begin{itemize}
+\item \textbf{Merge(T1,T2)} \\
+Takes the two three trees T1 and T2 and returns a two three tree T which represents the union of these two trees.
+\item \textbf{insert(node,position,m,type)} \\
+Takes 4 quantities, the root of the tree to be added, the position of the node with appropriate height to add the tree, minimum value of interest(may be minimum of tree rooted at node or position) and a number to denote the category of union. It returns nothing just changes the two three tree it is working upon.
+\item \textbf{insert-part(node,position,m,type)} \\
+It is the main insert function which works recursively and performs the task as explained in the "Strategy Used" header. Returns either a triplet (n1,n2,m) where n1 and n2 represent root of trees and m is minimum value in tree n2 or NULL.
+\end{itemize}
+
+\begin{algorithm}
+
+	\SetKwFunction{isOddNumber}{isOddNumber}
+	\SetKwInOut{KwIn}{Input}
+	\SetKwInOut{KwOut}{Output}
+
+	\KwIn{Two three trees th1 and th2}
+	\KwOut{A two three tree representing the Union of given trees}
+    
+     \If{$th1==NULL~TREE$} {
+        \KwRet{th2}
+     }
+     \If{$th2==NULL~TREE$} {
+        \KwRet{th1}
+    }
+
+    $temp1=th1.get()$ \\
+    $temp2=th2.get()$ \\
+    \tcc{get() function on any two three tree returns the root of that tree.}
+	
+    $h1=height~of~th1$ \\
+    $h2=height~of~th2$ \\
+    \tcc{Heights are found by traversing the trees downwards till a leaf is encountered.}
+
+    \eIf{$h1==h2$}{
+       $th.root =  twonode(th2.min(),temp1,temp2)$ \\
+	  \KwRet{th}
+	  \tcc{min() function on any tree returns the minimum value stored in it by getting to the leftmost leaf.}
+    }  {
+         \eIf{$h1>h2$} {
+        $position = node~of~tree~th1~at~height~(h2+1)~towards~the~rear~end$ 
+	  \tcc{This is found using tree traversals in O(h) time.} 
+        $th1.insert(temp2,position,th2.min(),2)$ \\
+	  \tcc{"1" represents that the shorter tree is added towards the front.}
+	  \tcc{"2" represents that the shorter tree is added towards the rear.}
+        \KwRet{th1}
+        }  {
+        $position = node~of~tree~th2~at~height~(h1+1)~towards~the~front~end$ \\
+        $th2.insert(temp1,position,th2.min(),1)$ \\
+        \KwRet{th2}
+        }
+    }
+
+	\caption{Merge(th1,th2)}
+
+\end{algorithm}
+
+\begin{algorithm}
+    
+	\KwIn{Works for a two three tree T having a node position. node is the root of tree to be added, type shows the end at which addition takes place and m denotes the minimum value of tree at position for type=1 and minimum value of tree at node for type=2.}
+	\KwOut{It returns nothing, the changes made by this reflect for the tree T.}
+
+     \eIf{$position == NULL$} { 
+        $position=node$
+     }
+        
+	\eIf{$position != LEAF ~and~ node != NULL$} {
+                $(n1,n2,min) = insert\_part(node,position,m,type)$  \\
+                \eIf{$n1!=NULL$} {
+                    $root=twonode(min,n1,n2)$
+                } {}
+    } {}
+
+    \KwRet{}
+    \caption{T.insert(node,position,m,type)}
+	
+\end{algorithm}
+
+\begin{algorithm}
+    
+	\KwIn{As in previous function}
+	\KwOut{Returns a triplet (n1,n2,m) where n1 and n2 are two nodes and m is the minimum value in tree rooted at n2.}
+
+     \eIf{$pos == twonode(a,\alpha,\beta)$} {
+        \eIf{$type==1$}{
+            $pos=threenode(m,a,node,\alpha,\beta)$ \\
+		 \KwRet{(NULL,NULL,-1)}
+        } {
+		 $pos=threenode(a,m,\alpha,\beta,node)$ \\
+		 \KwRet{(NULL,NULL,-1)}
+        }
+    } {} 
+   \eIf{$pos == threenode(a,b,\alpha,\beta,\gamma)$} {
+        \eIf{$type==1$} {
+            $k = twonode(m,node,\alpha)$ \\
+            $pos = twonode(b,\beta,\gamma)$ \\
+            \eIf{$pos \rightarrow parent==NULL$}{
+                \KwRet{(k,pos,a)}
+            } {
+                $p=insert\_part(k,pos \rightarrow parent, a ,type)$ \\
+			\KwRet{p}
+            }
+        } {
+            $k = twonode(m,\gamma,node)$ \\
+		 $pos = twonode(a,\alpha,\beta)$ \\
+            \eIf{$pos \rightarrow parent==NULL$}{
+                \KwRet{(pos,k,b)}
+            } {
+                $p=insert\_part(k,pos \rightarrow parent, b ,type)$ \\
+			\KwRet{p}
+            }
+        }
+    }
+
+	\caption{insert\_part(node,pos,m,type)}
+\end{algorithm}
+
+\newpage
+\section{Runtime Complexity Analysis}
+
+\begin{itemize}
+\item \textbf{insert\_part} \\
+A single iteration of the recursive function involves structuring the various pointers and structure parameters so that the new node is added as a child for the position node if possible otherwise a new node is made for it. So a single iteration of $insert\_part()$ takes \textbf{O(1) time}. Either the function stops at this if position is a twonode otherwise moves to the parent in search of accomodation for the extra node created. At max the function continues till the root so if h(node) denotes height of node -\\
+\textbf{Runtime Complexity = O(h(root))}
+\item \textbf{insert} \\
+This function just checks some of the boundary cases while adding the tree rooted at node to the given tree T. All the boundary checks just take \textbf{O(1) time} and then the function calls $insert\_part()$ function. So if h(T) denotes the height for a tree T. \\
+\textbf{Runtime Complexity = O(h(T))}
+\item \textbf{Merge} \\
+The Merge function involves traversing the tree for finding it's height and minimum values. If we traverse along the leftmost path starting from the root till we get a leaf we can find both the height and minimum value of the tree. Clearly this requires \textbf{O(h(T)) time}. For getting the appropriate nodes we can follow either the leftmost or rightmost path downwards and then come the required number of steps up. Again this would require \textbf{O(h(th1)+h(th2)) time} where th1 and th2 are the given trees. Than the algorithm calls $insert()$ function which again works in \textbf{O(h(T)) time}. \\
+So $overall~iterations <= constant * (h(th1)+h(th2)+h(th1)+h(th2)+h(th2))$ \\
+\textbf{Runtime Complexity = O(h(th1)+h(th2))}
+\end{itemize}
+
+So the overall time complexity for the running of algorithm Merge(T1,T2) would be \textbf{O(h(T1)+h(T2))}.
+
+\end{document}

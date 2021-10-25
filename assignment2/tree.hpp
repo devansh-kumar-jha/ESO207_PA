@@ -135,7 +135,7 @@ ret_insert_part* insert_part(twthnode* node,twthnode* pos,int m,int type)
             pos->left=pos->middle;
             pos->middle=pos->right;
             if(pos->parent==NULL) { p->m=pos->d1; p->n1=k; p->n2=pos; }
-            else p=insert_part(k,pos->parent,pos->d2,type);
+            else p=insert_part(k,pos->parent,pos->d1,type);
             pos->d1=pos->d2;
         }
         else {

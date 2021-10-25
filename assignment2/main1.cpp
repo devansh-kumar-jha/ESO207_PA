@@ -20,6 +20,5 @@ void test()
 int32_t main()
 {
     test();
-    cerr<<"Time:"<<1000*((double)clock())/(double)CLOCKS_PER_SEC<<"ms/n";
     return 0;
 }
