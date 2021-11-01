@@ -16,21 +16,44 @@
 
 \section{Solution to Part A}
 \subsection{Data Structure Used}
+A array of HEAD pointers is used where every HEAD represents a vertex of the graph and it points to a linked list storing the vertices connected to that particular vertex. This kind of graph representation is called as \textbf{Adjacency List Representation}. At the core the implementation is run fully through structures and pointers only.
 
 \subsection{Strategy for solving the problem}
 
-\subsection{Main functions used}
+\begin{itemize}
+\item It is pre-assumed that the graph G is bipartite and the first un-visited vertex is assumed to be in the partition $V_1$ of graph.
+\item All the un-visited vertices of the graph G which are connected to the current vertex are made a part of the partition other than the current vertex.
+\item In the above step if a vertex which is already assigned a partition is encountered then it is checked for consistency with the current changes. If inconsistent then our initial assumption is wrong and the graph is not bipartite.
+\item If the situation in step 3 does not arise then we go back to step 2 and perform it for all the vertices which were alloted there partition by the previous execution of that step.
+\end{itemize}
+
+By this strategy the non-connected vertices or components of the graph are automatically assigned to the partition $V_1$ and then continued however these vertices are actually floating and they can be kept any of the two partitions giving rise to multiple partition possibilities.
+
+\subsection{Main Functions used and Variables Defined}
+\subsubsection{Variables Defined}
+\begin{itemize}
+\item hello
+\end{itemize}
+
+\subsubsection{Functions Used}
 \begin{itemize}
 \item \textbf{Bipartite(G)} \\
 This returns the graphs $V_1$ and $V_2$ which are the partition of the set V of vertices of $G(V,E)$ in case G is bipartite otherwise returns a NULL.
-
 \end{itemize}
+
+\newcommand\mycommfont[1]{\small\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
 
 \subsection{Pseudocodes}
 
 \subsection{Runtime Analysis}
 
 \section{Solution to Part B}
-
+Answer to this part is given assuming the graph $G(V,E)$ is \textbf{Bipartite}.
+\subsection{Answer}
+If the graph G is connected then the partitions created for this graph will be unique however for a un-connected graph it will not be unique.
+\subsection{Explanantion}
+According to the flow of algorithm it is easy to see that when a graph is connected, as soon as we assume one of its veritces to be the part of one of the partitions all other vertices will have to join a partition accordingly and the partition each vertex should be kept into will be well defined. Even if we change the assumption for the first node it will result only on the shuffling of the partitions and not a change in there sets. \\
+However, in case of un-connected graph, as soon as we encounter a vertex whose partition cannot be determined from the previous vertices visited there generates a possibility for putting this to anyone of the partition and thus the final sets formed would not be unique.
 
 \end{document}
