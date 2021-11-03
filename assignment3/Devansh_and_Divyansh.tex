@@ -144,11 +144,13 @@ The graph is stored in \textbf{Adjacency List} so the size of the storage is \\
 \subsubsection{Detailed Explanation}
 \begin{itemize}
 \item \textbf{dfs(G,visited,part,i)} \\
-The dfs() function executes in \textbf{O(1) time} for a single vertex and then it calls recursively all the vertices on edges passing through the current vertex. This call is continued till either all the unvisited reachable vertices from the current position are traversed or entire graph is completed. So let us assume $V_i$ vertices are connected to the current vertex then surely $\|V_i\|<=\|V\|$. Also the function takes \textbf{O(1) time} for travelling on any edge. So let the edges to be traversed are $E_i$. So $\|E_i\|<=\|E\|$. \\
-\textbf{Runtime ~Complexity = $O(\|V_i\|+\|E_i\|)$}
+All the steps in dfs() function executes in \textbf{O(1) time} for a single vertex except the recursive calls. The recursive call is continued till either all the unvisited reachable vertices from the current position are traversed or entire graph is completed. So it takes \textbf{O(deg(v)) time} for the vertex v. \\
+\textbf{Runtime ~Complexity = $O(deg(v))$}
 \item \textbf{Bipartite(G)} \\
-Initializing visited, part, $V_1$ and $V_2$ all take \textbf{$O(\|V\|) time$}. As the dfs() function changes the visited and part arrays directly, evidently all the vertices and edges of the graph are traversed only once. Also the last while loop for putting values into $V_1$ and $V_2$ takes \textbf{$O(\|V\|) time$} so - \\
-$Total Iteration <= constant*(4*\|V\|+\|V\|+\|E\|+\|V\|)$ \\
+Initializing visited, part, $V_1$ and $V_2$ all take \textbf{$O(\|V\|) time$}. As the dfs() function changes the visited and part arrays directly, all the vertices of the graph are traversed only once. Also the last while loop for putting values into $V_1$ and $V_2$ takes \textbf{$O(\|V\|) time$} so - \\
+$Total Iteration <= constant*(4*\|V\|+\sum_{n=1}^{\|V\|}~deg(v_n)+\|V\|)$ \\
+Also by definition and pictorial representation of the graph - \\
+$\sum_{n=1}^{\|V\|}~deg(v_n) = \|E\| $ \\
 \textbf{Runtime ~Complexity = $O(\|V\|+\|E\|)$}
 \end{itemize}
 

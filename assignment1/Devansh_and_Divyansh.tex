@@ -13,25 +13,25 @@
 \begin{document}
 \maketitle
 
-\section{Problem Statements}
+% \section{Problem Statements}
 
-Polynomials may be represented as linked lists.  Consider a polynomial 
-\begin{equation*}
-p(x) = a_1x^{e_1} + a_2x^{e_2} + a_3x^{e_3} + . . . . + a_{n-1}x^{e_{n-1}} + a_nx^{e_n}
-\end{equation*}
-with non-zero terms, $ p(x) $ 
-where $ 0 <= e_1< e_2< . . . < e_{n-1} < e_n $ are (non-negative) integers.  We assume that coefficients  {a1, . . . , an} are non-zero integers. Polynomial {p(x)} can be represented as a linked list of nodes.  Each node has three fields:  coefficient, exponent and link to the next node.  Let us assume that list is a doubly linked list, with sentinel node, sorted in ascending order of exponents.
-\\
+% Polynomials may be represented as linked lists.  Consider a polynomial 
+% \begin{equation*}
+% p(x) = a_1x^{e_1} + a_2x^{e_2} + a_3x^{e_3} + . . . . + a_{n-1}x^{e_{n-1}} + a_nx^{e_n}
+% \end{equation*}
+% with non-zero terms, $ p(x) $ 
+% where $ 0 <= e_1< e_2< . . . < e_{n-1} < e_n $ are (non-negative) integers.  We assume that coefficients  {a1, . . . , an} are non-zero integers. Polynomial {p(x)} can be represented as a linked list of nodes.  Each node has three fields:  coefficient, exponent and link to the next node.  Let us assume that list is a doubly linked list, with sentinel node, sorted in ascending order of exponents.
+% \\
 
-(a) \textbf{(marks 5+15)} \\ 
-Write pseudo-code to add two polynomials {p(x) and q(x)} in this representation.  Your algorithm should take {O(n+m)} time, where {n, m} are the number of terms in {p(x) and q(x)} respectively.Implement your pseudo-code as an actual program.
+% (a) \textbf{(marks 5+15)} \\ 
+% Write pseudo-code to add two polynomials {p(x) and q(x)} in this representation.  Your algorithm should take {O(n+m)} time, where {n, m} are the number of terms in {p(x) and q(x)} respectively.Implement your pseudo-code as an actual program.
 
-(b) \textbf{(marks 10+20)} \\
-Write  pseudo-code  to  multiply  two  polynomials {p(x)  and q(x)}  in  this representation.   Do  runtime  complexity  analysis  of  your  algorithm  in  terms  of {n, m},  the number of terms in {p(x) and q(x)} respectively.  State this complexity in ‘O’ notation. Implement your pseudo-code as an actual program.
-\\ \\
-Note  that  output  list  should  satisfy  all  constraints  (non-zero  coefficients,  exponents  in  strict ascending order etc.)  of representation of a polynomial.  Make your code non-destructive, that is, it should not modify the lists for {p(x) and q(x)}.
+% (b) \textbf{(marks 10+20)} \\
+% Write  pseudo-code  to  multiply  two  polynomials {p(x)  and q(x)}  in  this representation.   Do  runtime  complexity  analysis  of  your  algorithm  in  terms  of {n, m},  the number of terms in {p(x) and q(x)} respectively.  State this complexity in ‘O’ notation. Implement your pseudo-code as an actual program.
+% \\ \\
+% Note  that  output  list  should  satisfy  all  constraints  (non-zero  coefficients,  exponents  in  strict ascending order etc.)  of representation of a polynomial.  Make your code non-destructive, that is, it should not modify the lists for {p(x) and q(x)}.
 
-\newpage
+% \newpage
 \section{Programming Problem 1}
 
 \subsection{Problem Description}
@@ -228,5 +228,8 @@ Totalling all the costs of all steps we get
 For some sufficiently large value of constant we can say that the terms $ mn $ and $ n^2 $  are of the same order and thus we choose convert it in form of $ mn $ as it is a more useful notation. \\
 \textbf{So the algorithm is having a time complexity of $ \textbf{O(m*n)} $}
 
+\section{Corrections after submission}
+The above algorithm is correct but the time complexity judged is wrong. The major mistake is the assumption that the total number of terms $T_N \approx (m+n)$. The correct assumption is not the near average case but rather the worst case and so $T_N<=mn$. So the worst time complexity comes out to be \\
+\textbf{Runtime Complexity = O(mn*n)}
 
 \end{document}
