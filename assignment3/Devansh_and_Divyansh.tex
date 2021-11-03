@@ -53,46 +53,10 @@ The structure \textbf{vertex} used is defined as under -
 
 \begin{itemize}
 \item \textbf{Bipartite(G)} \\
-G denotes the object of class graph. This returns the sets $V_1$ and $V_2$ which are the partition for the set V of vertices of graph $G(V,E)$ in case G is bipartite otherwise returns a NULL.
+G denotes the object of class graph. This returns an array which contains the set number in which each vertex of graph $G(V,E)$ lies in case G is bipartite otherwise returns a NULL.
 \item \textbf{dfs(G,visited,part,i,last)} \\
 Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are the numbers denoting index of the current vertex and the previous vertex being worked upon.This is the main working function which implements most of the working of the algorithm as discussed in ``Strategy Used" header. It returns a boolean value which is \textbf{false} if the graph is bipartite till the vertices examined or \textbf{true} otherwise.
 \end{itemize}
-
-\begin{algorithm}
-	\SetKwFunction{isOddNumber}{isOddNumber}
-	\SetKwInOut{KwIn}{Input}
-	\SetKwInOut{KwOut}{Output}
-	
-	\KwIn{A graph G.}
-	\KwOut{Two arrays representing sets $V_1$ and $V_2$.}
-
-	$visited \leftarrow FALSE~ boolean ~array ~of ~size~\|V\|$ \\
-	$part \leftarrow 0~integer~array~of~size~\|V\|$ \\
-	
-	\While{$v~in~G$} {
-		\eIf {$visited[v]==FALSE$} {
-			$flag \leftarrow dfs(G,visited,part,i,-1)$ \\
-			\tcc{-1 in place of last denotes first unvisited vertex.}
-			\eIf {$flag==TRUE$} { 
-				\KwRet{NULL} 
-			} { }
-		} { }
-	}
-	$V1~,~V2 \leftarrow empty ~number~ array$ \\
-	$len1~,~len2 \leftarrow 0$
-	
-	\While{$v~in~G$} {
-		\eIf {$part[v]==1$} {
-			$V1[len1]=v$ \\
-			$len1=len1+1$ \\
-		} {
-			$V2[len2]=v$ \\
-			$len2=len2+1$ \\
-		}
-	}
-	\KwRet{(V1,V2)}
-	\caption{Bipartite(G)}
-\end{algorithm}
 
 \begin{algorithm}
 	\SetKwFunction{isOddNumber}{isOddNumber}
@@ -134,6 +98,31 @@ Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are
 	\KwRet{FALSE}
 	
 	\caption{dfs(G,visited,part,i,last)}
+\end{algorithm}
+
+\begin{algorithm}
+	\SetKwFunction{isOddNumber}{isOddNumber}
+	\SetKwInOut{KwIn}{Input}
+	\SetKwInOut{KwOut}{Output}
+	
+	\KwIn{A graph G.}
+	\KwOut{An array representing set of each vertex.}
+
+	$visited \leftarrow FALSE~ boolean ~array ~of ~size~\|V\|$ \\
+	$part \leftarrow 0~integer~array~of~size~\|V\|$ \\
+	
+	\While{$v~in~G$} {
+		\eIf {$visited[v]==FALSE$} {
+			$flag \leftarrow dfs(G,visited,part,i,-1)$ \\
+			\tcc{-1 in place of last denotes first unvisited vertex.}
+			\eIf {$flag==TRUE$} { 
+				\KwRet{NULL} 
+			} { }
+		} { }
+	}
+
+	\KwRet{part}
+	\caption{Bipartite(G)}
 \end{algorithm}
 
 \newpage

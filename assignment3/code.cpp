@@ -35,14 +35,6 @@ class graph
     void clear();
 };
 
-/// This structure is of the type
-/// to be returned by the function Bipartite()
-struct ret_Bipartite
-{
-    int* V1;    int len1;
-    int* V2;    int len2;
-};
-
 /// Making of a new vertex with required index number.
 /// O(1) time.
 vertex* make_vertex(int num)
@@ -224,10 +216,11 @@ bool dfs(graph G,bool visited[],int part[],int i,int last)
 /// This is the main function which was demanded by the problem statement.
 /// This runs over the whole graph once.
 /// O(|V|+|E|) time.
-ret_Bipartite* Bipartite(graph G)
+int* Bipartite(graph G)
 {
     int n=G.length();
-    bool visited[n];    int part[n];
+    bool* visited=(bool*)malloc(n*sizeof(bool));
+    int* part=(int*)malloc(n*sizeof(int));
     for(int i=0;i<n;i++) {
         visited[i]=false;
         part[i]=0;
@@ -240,17 +233,7 @@ ret_Bipartite* Bipartite(graph G)
         }
     }
 
-    ret_Bipartite* p=new ret_Bipartite;
-    p->len1=0;  p->len2=0;
-    p->V1=(int*)malloc(n*sizeof(int));
-    p->V2=(int*)malloc(n*sizeof(int));
-
-    for(int i=0;i<n;i++) {
-        if(part[i]==1) { (p->V1)[p->len1]=i;  (p->len1)++; }
-        else { (p->V2)[p->len2]=i;  (p->len2)++; }
-    }
-
-    return p;
+    return part;
 }
 
 int32_t main()
@@ -260,17 +243,15 @@ int32_t main()
     graph G(n);
     for(int i=0;i<m;i++) {
         int a,b;  cin>>a>>b;
-        G.insert(a-1,b-1);
+        G.insert(a,b);
     }
 
     // Solving of the problem.
-    ret_Bipartite* ret=Bipartite(G);
-    if(ret==NULL) cout<<"The graph is not Bipartite"<<"\n";
+    int* ret=Bipartite(G);
+    if(ret==NULL) cout<<"NO";
     else {
-        for(int i=0;i<(ret->len1);i++) cout<<(ret->V1)[i]+1<<" ";
-        cout<<"\n";
-        for(int i=0;i<(ret->len2);i++) cout<<(ret->V2)[i]+1<<" ";
-        cout<<"\n";
+        cout<<"YES"<<"\n";
+        for(int i=0;i<n;i++) cout<<ret[i]<<"\n";
     }
 
     // Ending the program.
