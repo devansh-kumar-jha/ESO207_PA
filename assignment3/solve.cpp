@@ -19,7 +19,6 @@ int dfs(vector<vector<int>>& adj,vector<bool>& visited,vector<int>& part,int i,i
 
     for(int j=0;j<adj[i].size();j++) {
         if(adj[i][j]==last) continue;
-        if(visited[adj[i][j]]==true) continue;
         int t=dfs(adj,visited,part,adj[i][j],i);
         // cerr<<"recursive dfs"<<" ";
         if(t==1) return 1;

@@ -15,45 +15,90 @@
 \maketitle
 
 \section{Solution to Part A}
-\subsection{Data Structure Used}
-A array of HEAD pointers is used where every HEAD represents a vertex of the graph and it points to a linked list storing the vertices connected to that particular vertex. This kind of graph representation is called as \textbf{Adjacency List Representation}. At the core the implementation is run fully through structures and pointers only.
+\subsection{Data Structure Usage}
+The graph is represented in \textbf{Adjacency List Representation}. At the core the implementation is run fully through structures and pointers only. For data abstraction and easy handling it is arranged inside a class \textbf{graph} and uses structure \textbf{vertex}.
 
-\subsection{Strategy for solving the problem}
+\subsection{Strategy Used}
+It is assumed that the graph is bipartite and the following algorithm is run. If there is a contradiction within the working of the algorithm it will indicate that our initial assumption of a bipartite graph is wrong and the graph is not actually bipartite.
 
 \begin{itemize}
-\item It is pre-assumed that the graph G is bipartite and the first un-visited vertex is assumed to be in the partition $V_1$ of graph.
-\item All the un-visited vertices of the graph G which are connected to the current vertex are made a part of the partition other than the current vertex.
-\item In the above step if a vertex which is already assigned a partition is encountered then it is checked for consistency with the current changes. If inconsistent then our initial assumption is wrong and the graph is not bipartite.
-\item If the situation in step 3 does not arise then we go back to step 2 and perform it for all the vertices which were alloted there partition by the previous execution of that step.
+\item The first un-visited vertex encountered is assumed to be in the partition $V_1$ of graph.
+\item All the vertices of the graph G which are directly connected to the current vertex are made a part of the partition opposite to that of current vertex if they are not already visited.
+\item If a already visited vertex is encountered then it is checked for consistency with the changes intended by the above step. If inconsistent then our initial assumption of bipartite graph is wrong and the program will exit here otherwise no changes are done.
+\item If the situation in step 3 does not arise then we perform the 2nd step for all un-visited vertices directly connected to the current vertex.
+\item After completing step 4 for all connected vertices go back to step 1.
 \end{itemize}
 
-By this strategy the non-connected vertices or components of the graph are automatically assigned to the partition $V_1$ and then continued however these vertices are actually floating and they can be kept any of the two partitions giving rise to multiple partition possibilities.
-
-\subsection{Main Functions used and Variables Defined}
-\subsubsection{Variables Defined}
-\begin{itemize}
-\item hello
-\end{itemize}
-
-\subsubsection{Functions Used}
-\begin{itemize}
-\item \textbf{Bipartite(G)} \\
-This returns the graphs $V_1$ and $V_2$ which are the partition of the set V of vertices of $G(V,E)$ in case G is bipartite otherwise returns a NULL.
-\end{itemize}
+By this strategy the non-connected vertices or components of the graph are automatically assigned to the partition $V_1$ and then continued however these vertices are actually floating and they can be kept in any of the two partitions giving rise to multiple possible partitions.
 
 \newcommand\mycommfont[1]{\small\ttfamily\textcolor{blue}{#1}}
 \SetCommentSty{mycommfont}
 
-\subsection{Pseudocodes}
+\subsection{Structure Used}
+
+The structure \textbf{vertex} used is defined as under -
+\begin{algorithm}
+
+	struct vertex \{ \\
+		\hspace{1cm} int data; \\
+		\hspace{1cm} struct vertex* next; \\
+		\hspace{1cm} struct vertex* prev; \\
+	\}
+
+	\caption{Structure Declaration}
+
+\end{algorithm}
+
+\subsection{Pseudo Codes}
+
+\begin{itemize}
+\item \textbf{Bipartite(G)} \\
+G denotes the object of class graph. This returns the sets $V_1$ and $V_2$ which are the partition for the set V of vertices of graph $G(V,E)$ in case G is bipartite otherwise returns a NULL.
+\item \textbf{dfs(G,visited,part,i)} \\
+Here G is a graph,visited and part are arrays of size $\|V\|$ and i is a number denoting index of the current vertex being worked upon.This is the main working function which implements most of the working of the algorithm as discussed in ``Strategy Used" header. It returns a boolean value which is true if the graph is bipartite till the vertices examined or false otherwise. It also manages 2 arrays which stores the partitions formed till now. If the graph is finally found bipartite then these two arrays will be the respective sets $V_1$ and $V_2$ to be returned by $Bipartite(G)$.
+\end{itemize}
+
+\begin{algorithm}
+	\SetKwFunction{isOddNumber}{isOddNumber}
+	\SetKwInOut{KwIn}{Input}
+	\SetKwInOut{KwOut}{Output}
+
+	\KwIn{A graph G.}
+	\KwOut{Two arrays representing sets $V_1$ and $V_2$.}
+
+	\caption{Bipartite(G)}
+\end{algorithm}
+
+\begin{algorithm}
+	\SetKwFunction{isOddNumber}{isOddNumber}
+	\SetKwInOut{KwIn}{Input}
+	\SetKwInOut{KwOut}{Output}
+
+	\KwIn{A graph G, sets of size $\|V\|$ for visited and part and index number of the current vertex.}
+	\KwOut{A boolean value representing whether any contradiction in the initial assumption of bipartite graph is found.}
+	
+	\caption{dfs(G,visited,part,i)}
+\end{algorithm}
 
 \subsection{Runtime Analysis}
+\subsubsection{Intuition}
+The graph is stored in \textbf{Adjacency List} so the size of the storage is \\ 
+\textbf{$O(\|V\|+\|E\|)$}. The algorithm runs over all the vertices once and runs over all the edges of the graph also once. So it could be intuitively seen that the time complexity for the algorithm would be same as the size of the adjacency list representation.
+\subsubsection{Detailed Explanation}
+\begin{itemize}
+\item \textbf{dfs(G,visited,part,i)} \\
 
+\item \textbf{Bipartite(G)} \\
+
+\end{itemize}
+
+\newpage
 \section{Solution to Part B}
-Answer to this part is given assuming the graph $G(V,E)$ is \textbf{Bipartite}.
+Answer to this part is given assuming the graph $G(V,E)$ to be \textbf{Bipartite}.
 \subsection{Answer}
 If the graph G is connected then the partitions created for this graph will be unique however for a un-connected graph it will not be unique.
 \subsection{Explanantion}
-According to the flow of algorithm it is easy to see that when a graph is connected, as soon as we assume one of its veritces to be the part of one of the partitions all other vertices will have to join a partition accordingly and the partition each vertex should be kept into will be well defined. Even if we change the assumption for the first node it will result only on the shuffling of the partitions and not a change in there sets. \\
-However, in case of un-connected graph, as soon as we encounter a vertex whose partition cannot be determined from the previous vertices visited there generates a possibility for putting this to anyone of the partition and thus the final sets formed would not be unique.
+According to the algorithm it is easy to see that when a graph is connected, as soon as we assume one of its vertices to be the part of a partition all other vertices will have to join a partition accordingly and the fate for each vertex will be well defined. Even if we reverse the assumption for first node it will result only in the shuffling of partitions. \\
+However, in case of un-connected graph, as soon as we encounter a vertex which could not be reached by any of the previous vertices, there generates a possibility for keeping this to anyone of the partitions and thus the final sets formed would not be unique.
 
 \end{document}
