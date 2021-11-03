@@ -22,9 +22,9 @@ The graph is represented in \textbf{Adjacency List Representation}. At the core 
 It is assumed that the graph is bipartite and the following algorithm is run. If there is a contradiction within the working of the algorithm it will indicate that our initial assumption of a bipartite graph is wrong and the graph is not actually bipartite.
 
 \begin{itemize}
-\item The first un-visited vertex encountered is assumed to be in the partition $V_1$ of graph.
+\item The first unvisited vertex encountered is assumed to be in the partition $V_1$ of graph.
 \item All the vertices of the graph G which are directly connected to the current vertex are made a part of the partition opposite to that of current vertex if they are not already visited.
-\item If a already visited vertex is encountered then it is checked for consistency with the changes intended by the above step. If inconsistent then our initial assumption of bipartite graph is wrong and the program will exit here otherwise no changes are done.
+\item If an already visited vertex is encountered then it is checked for consistency with the changes intended by the above step. If inconsistent then our initial assumption of bipartite graph is wrong and the program will exit here otherwise no changes are done.
 \item If the situation in step 3 does not arise then we perform the 2nd step for all un-visited vertices directly connected to the current vertex.
 \item After completing step 4 for all connected vertices go back to step 1.
 \end{itemize}
@@ -54,18 +54,43 @@ The structure \textbf{vertex} used is defined as under -
 \begin{itemize}
 \item \textbf{Bipartite(G)} \\
 G denotes the object of class graph. This returns the sets $V_1$ and $V_2$ which are the partition for the set V of vertices of graph $G(V,E)$ in case G is bipartite otherwise returns a NULL.
-\item \textbf{dfs(G,visited,part,i)} \\
-Here G is a graph,visited and part are arrays of size $\|V\|$ and i is a number denoting index of the current vertex being worked upon.This is the main working function which implements most of the working of the algorithm as discussed in ``Strategy Used" header. It returns a boolean value which is true if the graph is bipartite till the vertices examined or false otherwise. It also manages 2 arrays which stores the partitions formed till now. If the graph is finally found bipartite then these two arrays will be the respective sets $V_1$ and $V_2$ to be returned by $Bipartite(G)$.
+\item \textbf{dfs(G,visited,part,i,last)} \\
+Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are the numbers denoting index of the current vertex and the previous vertex being worked upon.This is the main working function which implements most of the working of the algorithm as discussed in ``Strategy Used" header. It returns a boolean value which is \textbf{false} if the graph is bipartite till the vertices examined or \textbf{true} otherwise.
 \end{itemize}
 
 \begin{algorithm}
 	\SetKwFunction{isOddNumber}{isOddNumber}
 	\SetKwInOut{KwIn}{Input}
 	\SetKwInOut{KwOut}{Output}
-
+	
 	\KwIn{A graph G.}
 	\KwOut{Two arrays representing sets $V_1$ and $V_2$.}
 
+	$visited \leftarrow FALSE~ boolean ~array ~of ~size~\|V\|$ \\
+	$part \leftarrow 0~integer~array~of~size~\|V\|$ \\
+	
+	\While{$v~in~G$} {
+		\eIf {$visited[v]==FALSE$} {
+			$flag \leftarrow dfs(G,visited,part,i,-1)$ \\
+			\tcc{-1 in place of last denotes first unvisited vertex.}
+			\eIf {$flag==TRUE$} { 
+				\KwRet{NULL} 
+			} { }
+		} { }
+	}
+	$V1~,~V2 \leftarrow empty ~number~ array$ \\
+	$len1~,~len2 \leftarrow 0$
+	
+	\While{$v~in~G$} {
+		\eIf {$part[v]==1$} {
+			$V1[len1]=v$ \\
+			$len1=len1+1$ \\
+		} {
+			$V2[len2]=v$ \\
+			$len2=len2+1$ \\
+		}
+	}
+	\KwRet{(V1,V2)}
 	\caption{Bipartite(G)}
 \end{algorithm}
 
@@ -74,22 +99,57 @@ Here G is a graph,visited and part are arrays of size $\|V\|$ and i is a number 
 	\SetKwInOut{KwIn}{Input}
 	\SetKwInOut{KwOut}{Output}
 
-	\KwIn{A graph G, sets of size $\|V\|$ for visited and part and index number of the current vertex.}
+	\KwIn{A graph G, sets of size $\|V\|$ for visited and part and index number of the current and last vertex. last=-1 if it is the first unvisited vertex.}
 	\KwOut{A boolean value representing whether any contradiction in the initial assumption of bipartite graph is found.}
 	
-	\caption{dfs(G,visited,part,i)}
+	$visited[i]=TRUE$ \\
+     \eIf{$last==-1$} {
+		$part[i]=1$ \\
+	 } {    \eIf {$part[i]!=0$} {
+        			\eIf{$part[i]!=part[last]$} {
+					\KwRet{FALSE}
+				} {
+					\KwRet{TRUE}
+				}
+    	       	} {
+				\eIf{$part[last]==1$} {
+					$part[i]=2$ \\
+				} {
+					$part[i]=1$ \\
+				}
+	   		}
+	}
+
+    $temp \leftarrow G.get(i)$ \\
+	\tcc{get() function on graph gives the linked list containing all directly connected vertices to index i.}
+    \While{$v ~in ~temp$} {
+        \eIf{$v\rightarrow num!=last$} {
+            $x=dfs(G,visited,part,v \rightarrow num,i)$ \\
+            \eIf{$x==TRUE$} { 
+				\KwRet{TRUE}
+		   } { }
+        } { }
+    }
+	
+	\KwRet{FALSE}
+	
+	\caption{dfs(G,visited,part,i,last)}
 \end{algorithm}
 
+\newpage
 \subsection{Runtime Analysis}
 \subsubsection{Intuition}
 The graph is stored in \textbf{Adjacency List} so the size of the storage is \\ 
-\textbf{$O(\|V\|+\|E\|)$}. The algorithm runs over all the vertices once and runs over all the edges of the graph also once. So it could be intuitively seen that the time complexity for the algorithm would be same as the size of the adjacency list representation.
+\textbf{$O(\|V\|+\|E\|)$}. The algorithm runs over all the vertices and edges once. So it could be intuitively seen that the time complexity for the algorithm would be same as the size of the adjacency list representation.
 \subsubsection{Detailed Explanation}
 \begin{itemize}
 \item \textbf{dfs(G,visited,part,i)} \\
-
+The dfs() function executes in \textbf{O(1) time} for a single vertex and then it calls recursively all the vertices on edges passing through the current vertex. This call is continued till either all the unvisited reachable vertices from the current position are traversed or entire graph is completed. So let us assume $V_i$ vertices are connected to the current vertex then surely $\|V_i\|<=\|V\|$. Also the function takes \textbf{O(1) time} for travelling on any edge. So let the edges to be traversed are $E_i$. So $\|E_i\|<=\|E\|$. \\
+\textbf{Runtime ~Complexity = $O(\|V_i\|+\|E_i\|)$}
 \item \textbf{Bipartite(G)} \\
-
+Initializing visited, part, $V_1$ and $V_2$ all take \textbf{$O(\|V\|) time$}. As the dfs() function changes the visited and part arrays directly, evidently all the vertices and edges of the graph are traversed only once. Also the last while loop for putting values into $V_1$ and $V_2$ takes \textbf{$O(\|V\|) time$} so - \\
+$Total Iteration <= constant*(4*\|V\|+\|V\|+\|E\|+\|V\|)$ \\
+\textbf{Runtime ~Complexity = $O(\|V\|+\|E\|)$}
 \end{itemize}
 
 \newpage
