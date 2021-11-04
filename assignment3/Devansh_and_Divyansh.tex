@@ -16,7 +16,7 @@
 
 \section{Solution to Part A}
 \subsection{Data Structure Usage}
-The graph is represented in \textbf{Adjacency List Representation}. At the core the implementation is run fully through structures and pointers only. For data abstraction and easy handling it is arranged inside a class \textbf{graph} and uses structure \textbf{vertex}.
+The graph is represented in \textbf{Adjacency List Representation}. At the core this implementation is executed through structures and pointers. For data abstraction and easy handling it is arranged inside a class \textbf{graph} and uses structure \textbf{vertex}.
 
 \subsection{Strategy Used}
 It is assumed that the graph is bipartite and the following algorithm is run. If there is a contradiction within the working of the algorithm it will indicate that our initial assumption of a bipartite graph is wrong and the graph is not actually bipartite.
@@ -40,7 +40,7 @@ The structure \textbf{vertex} used is defined as under -
 \begin{algorithm}
 
 	struct vertex \{ \\
-		\hspace{1cm} int data; \\
+		\hspace{1cm} int num; \\
 		\hspace{1cm} struct vertex* next; \\
 		\hspace{1cm} struct vertex* prev; \\
 	\}
@@ -53,9 +53,9 @@ The structure \textbf{vertex} used is defined as under -
 
 \begin{itemize}
 \item \textbf{Bipartite(G)} \\
-G denotes the object of class graph. This returns an array which contains the set number in which each vertex of graph $G(V,E)$ lies in case G is bipartite otherwise returns a NULL.
+G denotes the object of class graph. This returns an array which contains the set number for each vertex of graph $G(V,E)$ in case it is bipartite otherwise returns a NULL.
 \item \textbf{dfs(G,visited,part,i,last)} \\
-Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are the numbers denoting index of the current vertex and the previous vertex being worked upon.This is the main working function which implements most of the working of the algorithm as discussed in ``Strategy Used" header. It returns a boolean value which is \textbf{false} if the graph is bipartite till the vertices examined or \textbf{true} otherwise.
+Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are the numbers denoting index of the current vertex and the previous vertex being worked upon.This is the main working function which implements most of the working of the algorithm as discussed in ``Strategy Used" header. It returns a boolean value which is \textbf{FALSE} if the graph is bipartite till the vertices examined or \textbf{TRUE} otherwise.
 \end{itemize}
 
 \begin{algorithm}
@@ -133,13 +133,13 @@ The graph is stored in \textbf{Adjacency List} so the size of the storage is \\
 \subsubsection{Detailed Explanation}
 \begin{itemize}
 \item \textbf{dfs(G,visited,part,i)} \\
-All the steps in dfs() function executes in \textbf{O(1) time} for a single vertex except the recursive calls. The recursive call is continued till either all the unvisited reachable vertices from the current position are traversed or entire graph is completed. So it takes \textbf{O(deg(v)) time} for the vertex v. \\
+All the steps in dfs() function executes in \textbf{O(1) time} for a single vertex except the recursive calls. The recursive call is continued till either all the unvisited reachable vertices from the current position are traversed or entire graph is completed. So it takes \textbf{O(deg(v)) time} for a particular vertex v. \\
 \textbf{Runtime ~Complexity = $O(deg(v))$}
 \item \textbf{Bipartite(G)} \\
-Initializing visited, part, $V_1$ and $V_2$ all take \textbf{$O(\|V\|) time$}. As the dfs() function changes the visited and part arrays directly, all the vertices of the graph are traversed only once. Also the last while loop for putting values into $V_1$ and $V_2$ takes \textbf{$O(\|V\|) time$} so - \\
-$Total Iteration <= constant*(4*\|V\|+\sum_{n=1}^{\|V\|}~deg(v_n)+\|V\|)$ \\
+Initializing visited and part takes \textbf{$O(\|V\|) time$}. As the dfs() function changes the visited and part arrays directly, all the vertices of the graph are traversed only once so - \\
+$Total Iteration <= constant*(2*\|V\|+\sum_{n=1}^{\|V\|}~deg(v_n)+\|V\|)$ \\
 Also by definition and pictorial representation of the graph - \\
-$\sum_{n=1}^{\|V\|}~deg(v_n) = \|E\| $ \\
+$\sum_{n=1}^{\|V\|}~deg(v_n) = 2*\|E\| $ \\
 \textbf{Runtime ~Complexity = $O(\|V\|+\|E\|)$}
 \end{itemize}
 
