@@ -137,7 +137,7 @@ All the steps in dfs() function executes in \textbf{O(1) time} for a single vert
 \textbf{Runtime ~Complexity = $O(deg(v))$}
 \item \textbf{Bipartite(G)} \\
 Initializing visited and part takes \textbf{$O(\|V\|) time$}. As the dfs() function changes the visited and part arrays directly, all the vertices of the graph are traversed only once so - \\
-$Total Iteration <= constant*(2*\|V\|+\sum_{n=1}^{\|V\|}~deg(v_n)+\|V\|)$ \\
+$Total Iteration <= constant*(2*\|V\|+\sum_{n=1}^{\|V\|}~deg(v_n))$ \\
 Also by definition and pictorial representation of the graph - \\
 $\sum_{n=1}^{\|V\|}~deg(v_n) = 2*\|E\| $ \\
 \textbf{Runtime ~Complexity = $O(\|V\|+\|E\|)$}
@@ -149,7 +149,7 @@ Answer to this part is given assuming the graph $G(V,E)$ to be \textbf{Bipartite
 \subsection{Answer}
 If the graph G is connected then the partitions created for this graph will be unique however for a un-connected graph it will not be unique.
 \subsection{Explanantion}
-According to the algorithm it is easy to see that when a graph is connected, as soon as we assume one of its vertices to be the part of a partition all other vertices will have to join a partition accordingly and the fate for each vertex will be well defined. Even if we reverse the assumption for first node it will result only in the shuffling of partitions. \\
+According to the algorithm it is easy to see that when a graph is connected, as soon as we assume one of its vertices to be the part of a partition all other vertices will have to join a partition accordingly and the fate for each vertex will be well defined. Even if we reverse the assumption for first vertex it will result only in the shuffling of partitions. \\
 However, in case of un-connected graph, as soon as we encounter a vertex which could not be reached by any of the previous vertices, there generates a possibility for keeping this to anyone of the partitions and thus the final sets formed would not be unique.
 
 \end{document}
