@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.6) (preloaded format=pdflatex 2021.8.31)  4 NOV 2021 01:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.6) (preloaded format=pdflatex 2021.8.31)  9 NOV 2021 13:55
 entering extended mode
 **"e:/Devansh/IIT Kanpur 3rd sem/ESO207/assignment/assignment3/Devansh_and_Divyansh.tex"
 (e:/Devansh/IIT Kanpur 3rd sem/ESO207/assignment/assignment3/Devansh_and_Divyansh.tex
@@ -347,17 +347,17 @@ Package rerunfilecheck Info: File `Devansh_and_Divyansh.out' has not changed.
 (rerunfilecheck)             Checksum: 575C29DEFE2563E94C19D6649849BF7B;1450.
  ) 
 Here is how much of TeX's memory you used:
- 10423 strings out of 478864
- 156234 string characters out of 2847712
- 491185 words of memory out of 3000000
+ 10422 strings out of 478864
+ 156221 string characters out of 2847712
+ 490185 words of memory out of 3000000
  28144 multiletter control sequences out of 15000+600000
  410270 words of font info for 51 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,18n,66p,549b,621s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,21n,66p,549b,668s stack positions out of 5000i,500n,10000p,200000b,80000s
  <C:\Users\Devansh\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Devansh/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Devansh_and_Divyansh.pdf (5 pages, 201815 bytes).
+Output written on Devansh_and_Divyansh.pdf (5 pages, 201433 bytes).
 PDF statistics:
- 219 PDF objects out of 1000 (max. 8388607)
- 73 named destinations out of 1000 (max. 500000)
+ 216 PDF objects out of 1000 (max. 8388607)
+ 72 named destinations out of 1000 (max. 500000)
  89 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -69,30 +69,24 @@ Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are
 	$visited[i]=TRUE$ \\
      \eIf{$last==-1$} {
 		$part[i]=1$ \\
-	 } {    \eIf {$part[i]!=0$} {
-        			\eIf{$part[i]!=part[last]$} {
-					\KwRet{FALSE}
-				} {
-					\KwRet{TRUE}
-				}
-    	       	} {
-				\eIf{$part[last]==1$} {
+	 } {  \eIf{$part[last]==1$} {
 					$part[i]=2$ \\
-				} {
+		   } {
 					$part[i]=1$ \\
-				}
-	   		}
+		   }
 	}
 
     $temp \leftarrow G.get(i)$ \\
 	\tcc{get() function on graph gives the linked list containing all directly connected vertices to index i.}
-    \While{$v ~in ~temp$} {
-        \eIf{$v\rightarrow num!=last$} {
-            $x=dfs(G,visited,part,v \rightarrow num,i)$ \\
-            \eIf{$x==TRUE$} { 
-				\KwRet{TRUE}
-		   } { }
-        } { }
+     \While{$v ~in ~temp$} {
+        \eIf{$v==last$} { } {
+	    		\eIf{$visited[v]==TRUE$} {
+				\eIf{$part[i]==part[v]$} { \KwRet{TRUE} } { }
+			} {
+				$ x \leftarrow dfs(G,visited,part,v,i) $ \\
+				\eIf{$x==TRUE$} { \KwRet{TRUE} } { }
+			}
+	    }
     }
 	
 	\KwRet{FALSE}
