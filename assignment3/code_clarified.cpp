@@ -31,8 +31,6 @@ class graph
     vertex* get(int i);
     vertex* sent(int i);
     void insert(int a,int b);
-    void display();
-    void clear();
 };
 
 /// Making of a new vertex with required index number.
@@ -59,34 +57,6 @@ vertex* insert_vertex(int num,vertex* TAIL,vertex* S)
     if(TAIL!=NULL) TAIL->next=temp;    
     S->prev=temp;       TAIL=temp;
     return TAIL;
-}
-
-/// Releasing the memory used by the Doubly Linked List
-/// representing edges connected to a single vertex.
-/// O(N) time where N is the number of edges connected to this vertex.
-void free_all(vertex *HEAD,vertex *TAIL,vertex* S)
-{
-    vertex *temp=HEAD;
-    while(temp!=S) {
-        if(temp->prev!=S) free(temp->prev);
-        temp=temp->next;
-    }
-    free(TAIL);
-    return;
-}
-
-/// Priting the contents of a Doubly Linked List
-/// showing the edges for a vertex.
-/// O(N) time where N is the number of edges connected to this vertex.
-void print_all(vertex* HEAD,vertex* S)
-{
-    vertex* temp=HEAD;
-    while(temp!=S) {
-        cout<<temp->num<<" ";
-        temp=temp->next;
-    }
-    cout<<"\n";
-    return; 
 }
 
 /// Contructor for making a graph with x number of vertices.
@@ -157,32 +127,6 @@ void graph::insert(int a,int b)
     return;
 }
 
-/// display() the adjacency list representation
-/// of the graph explicitly.
-/// O(|V|+2*|E|) time where |V| is number of vertices and |E| is number of edges.
-void graph::display()
-{
-    for(int i=0;i<size;i++) {
-        cout<<i<<"->";
-        print_all(head[i],SENT[i]);
-    }
-    return;
-}
-
-/// clear() all the data present in the graph.
-/// O(|V|+2*|E|) time where |V| is number of vertices and |E| is number of edges.
-void graph::clear()
-{
-    for(int i=0;i<size;i++) {
-        free_all(head[i],tail[i],SENT[i]);
-        SENT[i]->next=SENT[i];
-        SENT[i]->prev=SENT[i];
-        head[i]=SENT[i];
-        tail[i]=SENT[i];
-    }
-    return;
-}
-
 /////////////////////////////////////////////////// Main Functions related to the Problem ///////////////////////////////////////////
 
 /// This is a recursive function executed on the graph G.
@@ -198,8 +142,7 @@ bool dfs(graph G,bool visited[],int part[],int i,int last)
 
     vertex* temp=G.get(i);
     while(temp!=G.sent(i)) {
-        if(temp->num==last) {}
-        else if(visited[temp->num]==true) {
+        if(visited[temp->num]==true) {
             if(part[i]==part[temp->num]) return true;
         }
         else {
@@ -220,6 +163,9 @@ int* Bipartite(graph G)
     int n=G.length();
     bool* visited=(bool*)malloc(n*sizeof(bool));
     int* part=(int*)malloc(n*sizeof(int));
+    
+    if(n<2) return NULL;
+    
     for(int i=0;i<n;i++) {
         visited[i]=false;
         part[i]=0;
@@ -254,6 +200,5 @@ int32_t main()
     }
 
     // Ending the program.
-    G.clear();
     return 0;
 }

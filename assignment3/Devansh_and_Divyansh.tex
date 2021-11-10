@@ -79,14 +79,12 @@ Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are
     $temp \leftarrow G.get(i)$ \\
 	\tcc{get() function on graph gives the linked list containing all directly connected vertices to index i.}
      \While{$v ~in ~temp$} {
-        \eIf{$v==last$} { } {
 	    		\eIf{$visited[v]==TRUE$} {
 				\eIf{$part[i]==part[v]$} { \KwRet{TRUE} } { }
 			} {
 				$ x \leftarrow dfs(G,visited,part,v,i) $ \\
 				\eIf{$x==TRUE$} { \KwRet{TRUE} } { }
 			}
-	    }
     }
 	
 	\KwRet{FALSE}
@@ -105,6 +103,9 @@ Here G is a graph,visited and part are arrays of size $\|V\|$ and i and last are
 	$visited \leftarrow FALSE~ boolean ~array ~of ~size~\|V\|$ \\
 	$part \leftarrow 0~integer~array~of~size~\|V\|$ \\
 	
+	\eIf{$\|V\|<2$} { \KwRet{NULL} } { }
+	\tcc{If the total number of vertices are less than 2 then atleast one of the partitions will have to be empty which is not allowed.}
+
 	\While{$v~in~G$} {
 		\eIf {$visited[v]==FALSE$} {
 			$flag \leftarrow dfs(G,visited,part,i,-1)$ \\
@@ -141,9 +142,9 @@ $\sum_{n=1}^{\|V\|}~deg(v_n) = 2*\|E\| $ \\
 \section{Solution to Part B}
 Answer to this part is given assuming the graph $G(V,E)$ to be \textbf{Bipartite}.
 \subsection{Answer}
-If the graph G is connected then the partitions created for this graph will be unique however for a un-connected graph it will not be unique.
+If the graph G is connected then the partitions created for this graph will be unique however for a non-connected graph multiple partitions are feasible.
 \subsection{Explanantion}
 According to the algorithm it is easy to see that when a graph is connected, as soon as we assume one of its vertices to be the part of a partition all other vertices will have to join a partition accordingly and the fate for each vertex will be well defined. Even if we reverse the assumption for first vertex it will result only in the shuffling of partitions. \\
-However, in case of un-connected graph, as soon as we encounter a vertex which could not be reached by any of the previous vertices, there generates a possibility for keeping this to anyone of the partitions and thus the final sets formed would not be unique.
+However, if the graph is not connected then as soon as we encounter a vertex which could not be reached by any of the previous vertices, there generates a possibility for keeping this to anyone of the partitions and thus the final sets formed would not be unique.
 
 \end{document}
