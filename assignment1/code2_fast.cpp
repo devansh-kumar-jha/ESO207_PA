@@ -70,7 +70,7 @@ void print_all(node* HEAD,node* S)
 
 
 
-// This is the main problem solver function which implements the O(m*n) algorithm.
+// This is the main problem solver function which implements the O(n*m*m) algorithm.
 // This will take the two polynomials and also 2 pointers for the output polynomial.
 void make_list(node** HEAD,node** TAIL,node* HEAD1,node* TAIL1,node* HEAD2,node* TAIL2)
 {

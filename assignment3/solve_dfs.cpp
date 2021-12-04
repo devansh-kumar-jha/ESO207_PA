@@ -37,8 +37,8 @@ int32_t main()
 
     for(int i=0;i<m;i++) {
         int a,b;  cin>>a>>b;
-        adj[a-1].push_back(b-1);
-        adj[b-1].push_back(a-1);
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
     // cerr<<"Input done"<<" ";
 
@@ -46,24 +46,15 @@ int32_t main()
         if(visited[i]==false) {
             int flag=dfs(adj,visited,part,i,-1);
             if(flag==1) {
-                cout<<"Not Bipartite"<<"\n";
+                cout<<"NO"<<"\n";
                 cerr<<"Time:"<<1000*((double)clock())/(double)CLOCKS_PER_SEC<<"ms/n";
                 return 0;
             }
         }
     }
     
-    vector<int> v1;
-    vector<int> v2;
-    for(int i=0;i<n;i++) {
-        if(part[i]==1) v1.push_back(i+1);
-        else v2.push_back(i+1);
-    }
-
-    for(int i=0;i<v1.size();i++) cout<<v1[i]<<" ";
-    cout<<"\n";
-    for(int i=0;i<v2.size();i++) cout<<v2[i]<<" ";
-    cout<<"\n";
+    cout<<"YES"<<"\n";
+    for(int i=0;i<n;i++) cout<<part[i]<<"\n";
 
     cerr<<"Time:"<<1000*((double)clock())/(double)CLOCKS_PER_SEC<<"ms/n";
     return 0;

@@ -1,16 +1,15 @@
-#include<bits/stdc++.h>
+#include <iostream>
 using namespace std;
 #define int long long int
 
-
 // Self Referential Structure for the Doubly Linked List.
-struct node {
+struct node 
+{
     node *prev;
     int cof;
     int exp;
     node *next;
 };
-
 
 // Making of a new node with required initial values.
 node* make_node(int cof,int exp)
@@ -21,14 +20,11 @@ node* make_node(int cof,int exp)
     return temp;
 }
 
-
 // Setting up of global Sentinal Nodes for the Doubly Linked List.
 // As a precaution we will start with values which are not possible for any polynomial's actual node.
 node* SENT=make_node(0,-1);                     // Sentinel Node for Addition Polynomial
 node* SENT1=make_node(0,-1);                    // Sentinel Node for First Polynomial
 node* SENT2=make_node(0,-1);                    // Sentinel Node for Second Polynomial
-
-
 
 // Inserting the node with required value in a doubly linked list's tail.
 node* insert_node(int cof,int exp,node* TAIL,node* S)
@@ -42,21 +38,6 @@ node* insert_node(int cof,int exp,node* TAIL,node* S)
     return TAIL;
 }
 
-
-// Releasing the memory used in a Doubly Linked List.
-void free_all(node *HEAD,node *TAIL,node* S)
-{
-    node *temp=HEAD;
-    while(temp!=S) {
-        if(temp->prev!=S) free(temp->prev);
-        temp=temp->next;
-    }
-    free(TAIL);
-    return;
-}
-
-
-
 // Priting the contents of a Doubly Linked List.
 void print_all(node* HEAD,node* S)
 {
@@ -68,18 +49,177 @@ void print_all(node* HEAD,node* S)
     return; 
 }
 
-
-
-// This is the main problem solver function which implements the O(m*n) algorithm.
-// This will take the two polynomials and also 2 pointers for the output polynomial.
-void make_list(node** HEAD,node** TAIL,node* HEAD1,node* TAIL1,node* HEAD2,node* TAIL2)
+// Structure for lists.
+struct lst
 {
-    // Implement the Divide and Conquer Algorithm here !!!
-        
+    node* poly;
+    lst* prev;
+    lst* next;
+};
 
+// Lists class to control the lists in Divide and Conquer algorithm making.
+class lists
+{
+    public:
+    lst* head;
+    lst* tail;
+    lst* sent;
+    int len;
+    lists();
+    void insert(node* head);
+    void copy(lists F);
+};
+
+// Constructor for lists.
+lists::lists()
+{
+    sent=new lst;
+    sent->next=sent;
+    sent->prev=sent;
+    // sent->poly=make_node(0,-1);
+    // sent->poly->next=sent->poly;
+    // sent->poly->prev=sent->poly;
+    head=sent;
+    tail=sent;
+    len=0;
     return;
 }
 
+// Insert a particular node to a particular list number.
+void lists::insert(node* HEAD)
+{
+    lst* temp=new lst;
+    temp->next=sent;
+    tail->next=temp;
+    temp->prev=tail;
+    sent->prev=temp;
+    if(head==sent) head=tail;
+    temp->poly=HEAD;
+    tail=temp;
+    len++;
+    return;
+}
+
+// Copy a lists object into E.
+void lists::copy(lists F)
+{
+    len=F.len;
+    head=F.head;
+    tail=F.tail;
+    sent=F.sent;
+    return;
+}
+
+// Polynomial adding function which works in O(n+m) time.
+// Here n and m are the lengths of the polynomials being added.
+void poly_add(node** HEAD,node** TAIL,node** SENT,node* HEAD1,node* TAIL1,node* SENT1,node* HEAD2,node* TAIL2,node* SENT2)
+{
+    node *temp1=HEAD1,*temp2=HEAD2;
+
+    while(temp1!=SENT1 || temp2!=SENT2) {
+        if(temp1==SENT1) { 
+            (*TAIL)=insert_node(temp2->cof,temp2->exp,(*TAIL),(*SENT));
+            if((*HEAD)==(*SENT)) {
+                (*HEAD)=(*TAIL);   (*SENT)->next=(*HEAD);
+                (*HEAD)->prev=(*SENT);
+            }    
+            temp2=temp2->next;
+        }
+        else if(temp2==SENT2) { 
+            (*TAIL)=insert_node(temp1->cof,temp1->exp,(*TAIL),(*SENT));
+            if((*HEAD)==(*SENT)) {
+                (*HEAD)=(*TAIL);   (*SENT)->next=(*HEAD);
+                (*HEAD)->prev=(*SENT);
+            }
+            temp1=temp1->next;
+        }
+        else { 
+            if(temp1->exp<temp2->exp) {
+                (*TAIL)=insert_node(temp1->cof,temp1->exp,(*TAIL),(*SENT));
+                temp1=temp1->next;
+            }
+            else if(temp1->exp>temp2->exp) {
+                (*TAIL)=insert_node(temp2->cof,temp2->exp,(*TAIL),(*SENT));
+                temp2=temp2->next;
+            }
+            else {
+                if(temp1->cof+temp2->cof!=0) {
+                    (*TAIL)=insert_node(temp1->cof+temp2->cof,temp1->exp,(*TAIL),(*SENT));
+                }
+                temp1=temp1->next;
+                temp2=temp2->next;
+            }
+            if((*HEAD)==(*SENT)) {
+                (*HEAD)=(*TAIL);   (*SENT)->next=(*HEAD);
+                (*HEAD)->prev=(*SENT);
+            }
+        }
+    }
+    return;
+}
+
+// Polynomial multiplication function which works in O(m*n*log n) time.
+// Here n and m are the lengths of both the polynomials.
+void poly_mult(node** HEAD,node** TAIL,node* HEAD1,node* TAIL1,node* HEAD2,node* TAIL2,int n,int m)
+{
+    // Implement the Divide and Conquer Algorithm here !!!
+    // Implement this as soon as possible now !!!
+    
+    // Declaring of a empty set of lists to store n polynomials.
+    lists E;
+
+    // Filling of the set of n polynomials.
+    node* temp=HEAD1;
+    while(temp!=SENT1) {
+        node *s,*h,*t;
+        s=make_node(0,-1);
+        s->next=s;  s->prev=s;
+        h=s; t=s;
+        int a=temp->cof,e=temp->exp;
+        node* ta=HEAD2;
+        while(ta!=SENT2) {
+            t=insert_node(a*(ta->cof),e+(ta->exp),t,s);
+            if(h==s) { h=t; h->prev=s; s->next=h; }
+            ta=ta->next;
+        }
+        E.insert(h);
+        temp=temp->next;
+    }
+    cerr<<"Formed E"<<" ";
+
+    // Adding using divide and conquer strategy.
+    while(E.len>1) {
+        lists F;
+        lst* temp=E.head;
+        while(temp!=E.sent) {
+            if(temp==E.tail) {
+                F.insert(temp->poly);
+                temp=temp->next;
+            }
+            else {
+                lst* k=temp->next;
+                node *s,*h,*t;
+                s=make_node(0,-1);
+                s->next=s;  s->prev=s;
+                h=s; t=s;
+                poly_add(&h,&t,&s,temp->poly,temp->poly->prev->prev,temp->poly->prev,k->poly,k->poly->prev->prev,k->poly->prev);
+                F.insert(h);
+                temp=temp->next->next;
+            }
+            cerr<<"adds"<<" ";
+        }
+        E.copy(F);
+        cerr<<"Completed a iteration"<<" ";
+    }
+
+    print_all(E.head->poly,E.head->poly->prev);
+    // Giving the output values.
+    (*HEAD)=(E.head)->poly;
+    (*TAIL)=(E.head)->poly;
+    SENT=((E.head)->poly)->prev;
+
+    return;
+}
 
 // The main() contains the exact control flow of the program.
 int32_t main()
@@ -121,24 +261,14 @@ int32_t main()
     /* Solving of the Problem Statement */
     
     struct node *HEAD=SENT,*TAIL=SENT;
-    make_list(&HEAD,&TAIL,HEAD1,TAIL1,HEAD2,TAIL2);
+    cerr<<"Going to function"<<" ";
+    if(n<m) poly_mult(&HEAD,&TAIL,HEAD1,TAIL1,HEAD2,TAIL2,n,m);
+    else poly_mult(&HEAD,&TAIL,HEAD2,TAIL2,HEAD1,TAIL1,m,n);
+    cerr<<"Back to main"<<" ";
     print_all(HEAD,SENT);
-    
-    /* Releasing the Memory Used */
-    
-    free_all(HEAD,TAIL,SENT);
-    free_all(HEAD1,TAIL1,SENT1);
-    free_all(HEAD2,TAIL2,SENT2);
-    
-    HEAD1=NULL;   TAIL1=NULL;
-    HEAD2=NULL;   TAIL2=NULL;
-    HEAD =NULL;   TAIL =NULL;
-
-    free(SENT1);
-    free(SENT2);
-    free(SENT);
 
     /* Ending of the Program */
     
+    cerr<<"Program finished"<<" ";
     return 0;
 }
